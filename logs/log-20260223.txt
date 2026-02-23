@@ -1,0 +1,71 @@
+16:56:23 [Debug] Testing: Debug
+16:56:23 [Information] Testing: Information
+16:56:23 [Warning] Testing: Warning
+16:56:23 [Error] Testing: Error
+16:56:23 [Fatal] Testing: Fatal
+16:56:23 [Information] 
+
+,--.          .   .---.             
+|   \ . . ,-. | , \___  ,-. . . ,-. 
+|   / | | |   |<      \ | | | | | | 
+^--'  `-^ `-' ' ` `---' `-' `-^ |-' 
+                                |   
+         Version  "2.2.0-RELEASE+0919317d39cf3ebcd5fef087ed1338996a148e9d"         ' 
+
+
+16:56:23 [Warning] Settings.json created. Please stop the Proxy and configure the file.
+16:56:42 [Error] An error occurred while migrating the database: SqlException { Errors: [SqlError { Source: "Core Microsoft SqlClient Data Provider", Number: 1214, State: 0, Class: 20, Server: "", Message: "SQL Server'a bağlantı kurulurken ağla ilgili veya örneğe özel bir hata oluştu. Sunucu bulunamadı ya da sunucuya erişilemiyor. Örnek adının doğru olduğunu ve SQL Server'ın uzaktan bağlantılara izin verecek şekilde yapılandırıldığını doğrulayın. (provider: TCP Sağlayıcısı, error: 0 - Belirtilen ağ adının biçimi geçersiz.)", Procedure: null, LineNumber: 0 }], ClientConnectionId: 00000000-0000-0000-0000-000000000000, Class: 20, LineNumber: 0, Number: 1214, Procedure: null, Server: "", State: 0, Source: "Core Microsoft SqlClient Data Provider", BatchCommand: null, IsTransient: False, SqlState: null, ErrorCode: -2146232060, TargetSite: Void OnError(Microsoft.Data.SqlClient.SqlException, Boolean, System.Action`1[System.Action]), Message: "SQL Server'a bağlantı kurulurken ağla ilgili veya örneğe özel bir hata oluştu. Sunucu bulunamadı ya da sunucuya erişilemiyor. Örnek adının doğru olduğunu ve SQL Server'ın uzaktan bağlantılara izin verecek şekilde yapılandırıldığını doğrulayın. (provider: TCP Sağlayıcısı, error: 0 - Belirtilen ağ adının biçimi geçersiz.)", Data: [DictionaryEntry { Key: "HelpLink.ProdName", Value: "Microsoft SQL Server" }, DictionaryEntry { Key: "HelpLink.EvtSrc", Value: "MSSQLServer" }, DictionaryEntry { Key: "HelpLink.EvtID", Value: "1214" }, DictionaryEntry { Key: "HelpLink.BaseHelpUrl", Value: "https://go.microsoft.com/fwlink" }, DictionaryEntry { Key: "HelpLink.LinkId", Value: "20476" }], InnerException: Win32Exception { NativeErrorCode: 1214, ErrorCode: -2147467259, TargetSite: null, Message: "Belirtilen ağ adının biçimi geçersiz.", Data: [], InnerException: null, HelpLink: null, Source: null, HResult: -2147467259, StackTrace: null }, HelpLink: null, HResult: -2146232060, StackTrace: "   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, SqlCommand command, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.Connect(ServerInfo serverInfo, SqlInternalConnectionTds connHandler, TimeoutTimer timeout, SqlConnectionString connectionOptions, Boolean withFailover)
+   at Microsoft.Data.SqlClient.SqlInternalConnectionTds.AttemptOneLogin(ServerInfo serverInfo, String newPassword, SecureString newSecurePassword, TimeoutTimer timeout, Boolean withFailover)
+   at Microsoft.Data.SqlClient.SqlInternalConnectionTds.LoginNoFailover(ServerInfo serverInfo, String newPassword, SecureString newSecurePassword, Boolean redirectedUserInstance, SqlConnectionString connectionOptions, SqlCredential credential, TimeoutTimer timeout)
+   at Microsoft.Data.SqlClient.SqlInternalConnectionTds.OpenLoginEnlist(TimeoutTimer timeout, SqlConnectionString connectionOptions, SqlCredential credential, String newPassword, SecureString newSecurePassword, Boolean redirectedUserInstance)
+   at Microsoft.Data.SqlClient.SqlInternalConnectionTds..ctor(DbConnectionPoolIdentity identity, SqlConnectionString connectionOptions, SqlCredential credential, Object providerInfo, String newPassword, SecureString newSecurePassword, Boolean redirectedUserInstance, SqlConnectionString userConnectionOptions, SessionData reconnectSessionData, Boolean applyTransientFaultHandling, String accessToken, DbConnectionPool pool, Func`3 accessTokenCallback)
+   at Microsoft.Data.SqlClient.SqlConnectionFactory.CreateConnection(DbConnectionOptions options, DbConnectionPoolKey poolKey, Object poolGroupProviderInfo, DbConnectionPool pool, DbConnection owningConnection, DbConnectionOptions userOptions)
+   at Microsoft.Data.ProviderBase.DbConnectionFactory.CreatePooledConnection(DbConnectionPool pool, DbConnection owningObject, DbConnectionOptions options, DbConnectionPoolKey poolKey, DbConnectionOptions userOptions)
+   at Microsoft.Data.ProviderBase.DbConnectionPool.CreateObject(DbConnection owningObject, DbConnectionOptions userOptions, DbConnectionInternal oldConnection)
+   at Microsoft.Data.ProviderBase.DbConnectionPool.UserCreateRequest(DbConnection owningObject, DbConnectionOptions userOptions, DbConnectionInternal oldConnection)
+   at Microsoft.Data.ProviderBase.DbConnectionPool.TryGetConnection(DbConnection owningObject, UInt32 waitForMultipleObjectsTimeout, Boolean allowCreate, Boolean onlyOneCheckConnection, DbConnectionOptions userOptions, DbConnectionInternal& connection)
+   at Microsoft.Data.ProviderBase.DbConnectionPool.TryGetConnection(DbConnection owningObject, TaskCompletionSource`1 retry, DbConnectionOptions userOptions, DbConnectionInternal& connection)
+   at Microsoft.Data.ProviderBase.DbConnectionFactory.TryGetConnection(DbConnection owningConnection, TaskCompletionSource`1 retry, DbConnectionOptions userOptions, DbConnectionInternal oldConnection, DbConnectionInternal& connection)
+   at Microsoft.Data.ProviderBase.DbConnectionInternal.TryOpenConnectionInternal(DbConnection outerConnection, DbConnectionFactory connectionFactory, TaskCompletionSource`1 retry, DbConnectionOptions userOptions)
+   at Microsoft.Data.ProviderBase.DbConnectionClosed.TryOpenConnection(DbConnection outerConnection, DbConnectionFactory connectionFactory, TaskCompletionSource`1 retry, DbConnectionOptions userOptions)
+   at Microsoft.Data.SqlClient.SqlConnection.TryOpen(TaskCompletionSource`1 retry, SqlConnectionOverrides overrides)
+   at Microsoft.Data.SqlClient.SqlConnection.Open(SqlConnectionOverrides overrides)
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerConnection.OpenDbConnection(Boolean errorsExpected)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenInternal(Boolean errorsExpected)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.Open(Boolean errorsExpected)
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerDatabaseCreator.<>c__DisplayClass18_0.<Exists>b__0(DateTime giveUp)
+   at Microsoft.EntityFrameworkCore.ExecutionStrategyExtensions.<>c__DisplayClass12_0`2.<Execute>b__0(DbContext _, TState s)
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.Execute[TState,TResult](TState state, Func`3 operation, Func`3 verifySucceeded)
+   at Microsoft.EntityFrameworkCore.ExecutionStrategyExtensions.Execute[TState,TResult](IExecutionStrategy strategy, TState state, Func`2 operation, Func`2 verifySucceeded)
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerDatabaseCreator.Exists(Boolean retryOnNotExists)
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerDatabaseCreator.Exists()
+   at Microsoft.EntityFrameworkCore.Migrations.Internal.Migrator.Migrate(String targetMigration)
+   at Microsoft.EntityFrameworkCore.RelationalDatabaseFacadeExtensions.Migrate(DatabaseFacade databaseFacade)
+   at DuckSoup.Library.Database.DatabaseManager..ctor() in C:\Users\DELL\Desktop\VSRODevelopment\devkit1012\ducksoup\DuckSoup\Library\Database\DatabaseManager.cs:line 31" }
+16:56:43 [Error] Program.cs Main| "SQL Server'a bağlantı kurulurken ağla ilgili veya örneğe özel bir hata oluştu. Sunucu bulunamadı ya da sunucuya erişilemiyor. Örnek adının doğru olduğunu ve SQL Server'ın uzaktan bağlantılara izin verecek şekilde yapılandırıldığını doğrulayın. (provider: TCP Sağlayıcısı, error: 0 - Belirtilen ağ adının biçimi geçersiz.)"
+16:56:44 [Error] Program.cs Main| "   at Microsoft.Data.ProviderBase.DbConnectionPool.TryGetConnection(DbConnection owningObject, UInt32 waitForMultipleObjectsTimeout, Boolean allowCreate, Boolean onlyOneCheckConnection, DbConnectionOptions userOptions, DbConnectionInternal& connection)
+   at Microsoft.Data.ProviderBase.DbConnectionPool.TryGetConnection(DbConnection owningObject, TaskCompletionSource`1 retry, DbConnectionOptions userOptions, DbConnectionInternal& connection)
+   at Microsoft.Data.ProviderBase.DbConnectionFactory.TryGetConnection(DbConnection owningConnection, TaskCompletionSource`1 retry, DbConnectionOptions userOptions, DbConnectionInternal oldConnection, DbConnectionInternal& connection)
+   at Microsoft.Data.ProviderBase.DbConnectionInternal.TryOpenConnectionInternal(DbConnection outerConnection, DbConnectionFactory connectionFactory, TaskCompletionSource`1 retry, DbConnectionOptions userOptions)
+   at Microsoft.Data.ProviderBase.DbConnectionClosed.TryOpenConnection(DbConnection outerConnection, DbConnectionFactory connectionFactory, TaskCompletionSource`1 retry, DbConnectionOptions userOptions)
+   at Microsoft.Data.SqlClient.SqlConnection.TryOpen(TaskCompletionSource`1 retry, SqlConnectionOverrides overrides)
+   at Microsoft.Data.SqlClient.SqlConnection.Open(SqlConnectionOverrides overrides)
+   at Microsoft.Data.SqlClient.SqlConnection.Open()
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerConnection.OpenDbConnection(Boolean errorsExpected)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenInternal(Boolean errorsExpected)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.Open(Boolean errorsExpected)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReader(RelationalCommandParameterObject parameterObject)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.InitializeReader(Enumerator enumerator)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.<>c.<MoveNext>b__21_0(DbContext _, Enumerator enumerator)
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.Execute[TState,TResult](TState state, Func`3 operation, Func`3 verifySucceeded)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+   at System.Linq.Enumerable.TryGetSingle[TSource](IEnumerable`1 source, Boolean& found)
+   at lambda_method41(Closure, QueryContext)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryCompiler.ExecuteCore[TResult](Expression query, Boolean async, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryCompiler.Execute[TResult](Expression query)
+   at Microsoft.EntityFrameworkCore.Query.Internal.EntityQueryProvider.Execute[TResult](Expression expression)
+   at API.Database.DatabaseHelper.GetSettingOrDefault(String key, String defaultValue) in C:\Users\DELL\Desktop\VSRODevelopment\devkit1012\ducksoup\API\Database\DatabaseHelper.cs:line 10
+   at DuckSoup.Library.SharedObjects..ctor() in C:\Users\DELL\Desktop\VSRODevelopment\devkit1012\ducksoup\DuckSoup\Library\SharedObjects.cs:line 20
+   at DuckSoup.Program.Main() in C:\Users\DELL\Desktop\VSRODevelopment\devkit1012\ducksoup\DuckSoup\Program.cs:line 67"

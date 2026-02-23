@@ -1,0 +1,13 @@
+{
+  "Address": "0.0.0.0",
+  "Port": 1433,
+  "Username": "sa",
+  "Password": "123456",
+  "SharDb": "SRO_VT_SHARD",
+  "LogDb": "SRO_VT_LOG",
+  "AccountDb": "SRO_VT_ACCOUNT",
+  "ProxyDb": "DuckSoup",
+  "MaximumPool": 500,
+  "MinimumPool": 50,
+  "ConnectionLifetime": 0
+}

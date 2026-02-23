@@ -1,0 +1,130 @@
+﻿using System;
+using System.Threading.Tasks;
+using System.Timers;
+using API.Session;
+using PacketLibrary.Handler;
+using SilkroadSecurityAPI.Message;
+
+namespace DuckSoup.Library.Session;
+
+public class CountdownManager : ICountdownManager
+{
+    private readonly ISession _session;
+    private DateTime? _started;
+    private bool _stopOnDead;
+    private bool _stopOnTeleport;
+    private Timer _timer;
+    private int _timerInterval;
+
+    public CountdownManager(ISession session)
+    {
+        _timerInterval = -1;
+        _session = session;
+        _stopOnDead = true;
+        _stopOnTeleport = true;
+    }
+
+    public void Start(int timeInSeconds, ICountdownManager.Action action)
+    {
+        Start(timeInSeconds, true, true, action);
+    }
+
+    public void Start(int timeInSeconds, bool stopOnTeleport, bool stopOnDead, ICountdownManager.Action action)
+    {
+        Start(timeInSeconds, stopOnTeleport, stopOnDead, true, action);
+    }
+
+
+    public void Start(int timeInSeconds, bool stopOnTeleport, bool stopOnDead, bool stopOldTimer,
+        ICountdownManager.Action action)
+    {
+        if (stopOldTimer) Stop();
+
+        timeInSeconds *= 1000;
+
+        if (timeInSeconds > 1200000) timeInSeconds = 1200000;
+
+        _stopOnDead = stopOnDead;
+        _stopOnTeleport = stopOnTeleport;
+        _timerInterval = timeInSeconds;
+        _timer = new Timer();
+        _timer.Interval = 100;
+        _timer.AutoReset = true;
+        _timer.Elapsed += (_, _) =>
+        {
+            if (_started.GetValueOrDefault().AddMilliseconds(_timerInterval).Subtract(DateTime.Now).TotalMilliseconds >
+                0) return;
+            Task.Run(async () =>
+            {
+                Stop();
+                await action();
+                return Task.CompletedTask;
+            });
+        };
+        _timer.Start();
+        _started = DateTime.Now;
+
+        _session.SendToClient(CreateStartPacket());
+    }
+
+    public void Resend()
+    {
+        _session.SendToClient(CreateStartPacket());
+    }
+
+    public void Stop()
+    {
+        _timer?.Stop();
+        _timer = null;
+        _started = null;
+        _timerInterval = -1;
+        _stopOnDead = true;
+        _stopOnTeleport = true;
+
+        _session.SendToClient(CreateStopPacket());
+    }
+
+    public bool IsStarted()
+    {
+        return _timer != null && _started != null && _timerInterval != -1 &&
+               _started.GetValueOrDefault().AddSeconds(_timerInterval) >= DateTime.Now;
+    }
+
+    public bool IsStopOnTeleport()
+    {
+        return _stopOnTeleport;
+    }
+
+    public bool IsStopOnDead()
+    {
+        return _stopOnDead;
+    }
+
+    public TimeSpan LeftTime()
+    {
+        if (!IsStarted()) return TimeSpan.FromSeconds(0);
+
+        return TimeSpan.FromSeconds(_started.GetValueOrDefault().AddSeconds(_timerInterval).Subtract(DateTime.Now)
+            .TotalSeconds);
+    }
+
+
+    private Packet CreateStartPacket()
+    {
+        int packetTime = 1200000 - (int)_started.GetValueOrDefault().AddMilliseconds(_timerInterval)
+            .Subtract(DateTime.Now).TotalMilliseconds;
+
+        Packet response = new Packet(0x34B1);
+        response.TryWrite<byte>(0xFF)
+            .TryWrite<byte>(0x0E)
+            .TryWrite((uint)packetTime);
+        return response;
+    }
+
+    private Packet CreateStopPacket()
+    {
+        Packet response = new Packet(0x34B1);
+        response.TryWrite<byte>(0x05);
+        return response;
+    }
+}

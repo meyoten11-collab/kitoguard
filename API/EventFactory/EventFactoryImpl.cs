@@ -1,0 +1,75 @@
+﻿using API.Exceptions;
+
+namespace API.EventFactory;
+
+public class EventFactoryImpl : IEventFactory
+{
+    public EventFactoryImpl()
+    {
+        Listeners = new Dictionary<string, HashSet<Delegate>>();
+    }
+
+    private Dictionary<string, HashSet<Delegate>>? Listeners { get; set; }
+
+    public void Subscribe(string name, Action? handler)
+    {
+        if (handler == null || Listeners == null) return;
+
+        if (!Listeners.ContainsKey(name)) Listeners.Add(name, new HashSet<Delegate>());
+
+        Listeners[name].Add(handler);
+    }
+
+    public void Subscribe(string name, Delegate? handler)
+    {
+        if (handler == null || Listeners == null) return;
+
+        if (!Listeners.ContainsKey(name)) Listeners.Add(name, new HashSet<Delegate>());
+
+        Listeners[name].Add(handler);
+    }
+
+    public void Unsubscribe(string name, Action? handler)
+    {
+        if (handler == null || Listeners == null || !Listeners.ContainsKey(name)) return;
+
+        List<Delegate> keysToRemove = Listeners[name].Where(m => m.Equals(handler)).ToList();
+        keysToRemove.ForEach(key => Listeners[name].Remove(key));
+    }
+
+    public void Unsubscribe(string name, Delegate? handler)
+    {
+        if (handler == null || Listeners == null || !Listeners.ContainsKey(name)) return;
+
+        List<Delegate> keysToRemove = Listeners[name].Where(m => m.Equals(handler)).ToList();
+        keysToRemove.ForEach(key => Listeners[name].Remove(key));
+    }
+
+    public void Publish(string name, params object[] parameters)
+    {
+        if (Listeners == null || !Listeners.ContainsKey(name)) return;
+
+        Task.Run(() =>
+        {
+            foreach (Delegate listener in Listeners[name])
+            {
+                listener.DynamicInvoke(parameters);
+            }
+        });
+    }
+
+    public bool HasSubscriptions(string name)
+    {
+        if (Listeners == null || !Listeners.TryGetValue(name, out HashSet<Delegate>? listener)) return false;
+
+        return listener.Count > 0;
+    }
+
+    public void Dispose()
+    {
+        if (Listeners == null) throw new DisposedException(nameof(EventFactoryImpl));
+
+        Listeners.Clear();
+        Listeners = null;
+    }
+}

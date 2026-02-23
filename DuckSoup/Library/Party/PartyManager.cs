@@ -1,0 +1,161 @@
+﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
+using API.Party;
+using API.ServiceFactory;
+using API.Session;
+using DuckSoup.Library.Session;
+using PacketLibrary.Handler;
+
+namespace DuckSoup.Library.Party;
+
+public class PartyManager : IPartyManager
+{
+    private readonly ConcurrentDictionary<int, IParty> _parties = new ConcurrentDictionary<int, IParty>();
+
+    private readonly ConcurrentDictionary<int, IPartyMatchEntry?> _partyMatchEntries = new ConcurrentDictionary<int, IPartyMatchEntry?>();
+
+    public PartyManager()
+    {
+        ServiceFactory.Register<IPartyManager>(typeof(IPartyManager), this);
+    }
+
+    public List<IParty> GetParties()
+    {
+        return _parties.Values.ToList();
+    }
+
+    public IParty? GetParty(int id)
+    {
+        return _parties.TryGetValue(id, out IParty? value) ? value : null;
+    }
+
+    public IParty? GetParty(string charName)
+    {
+        return _parties.Values.FirstOrDefault(party => party.Members.Any(partyMember =>
+        {
+            partyMember.GetData(Data.CharInfo, out CharInfo? charInfo, null);
+            if (charInfo == null) return false;
+
+            return string.Equals(charInfo.CharName, charName, StringComparison.CurrentCultureIgnoreCase);
+        }));
+    }
+
+    public IParty? GetParty(ISession session)
+    {
+        return _parties.Values.FirstOrDefault(party =>
+            party.Members.Any(partyMember => partyMember.Guid == session.Guid));
+    }
+
+    public void AddParty(IParty party)
+    {
+        _parties.AddOrUpdate(party.PartyId, party, (_, _) => party);
+    }
+
+    public void RemoveParty(int id)
+    {
+        IParty? party = GetParty(id);
+        if (party == null) return;
+
+        RemovePartyMatchEntry(party);
+        _parties.Remove(id, out _);
+    }
+
+    public void RemoveParty(string charName)
+    {
+        IParty? party = GetParty(charName);
+        if (party == null) return;
+
+        RemovePartyMatchEntry(party);
+        _parties.Remove(party.PartyId, out _);
+    }
+
+    public void RemoveParty(ISession session)
+    {
+        IParty? party = GetParty(session);
+        if (party == null) return;
+
+        RemovePartyMatchEntry(party);
+        _parties.Remove(party.PartyId, out _);
+    }
+
+    public bool IsInParty(string charName)
+    {
+        return _parties.Values.Any(party => party.Members.Any(partyMember =>
+        {
+            partyMember.GetData(Data.CharInfo, out ICharInfo? charInfo, null);
+            if (charInfo == null) return false;
+
+            return string.Equals(charInfo.CharName, charName, StringComparison.CurrentCultureIgnoreCase);
+        }));
+    }
+
+    public bool IsInParty(ISession session)
+    {
+        return _parties.Values.Any(party => party.Members.Any(partyMember => partyMember.Guid == session.Guid));
+    }
+
+    public bool HasPartyMatchEntry(string charName)
+    {
+        return _partyMatchEntries.Values.Any(entry => entry?.Party != null && entry.Party.Members.Any(partyMember =>
+        {
+            partyMember.GetData(Data.CharInfo, out ICharInfo? charInfo, null);
+            if (charInfo == null) return false;
+
+            return string.Equals(charInfo.CharName, charName, StringComparison.CurrentCultureIgnoreCase);
+        }));
+    }
+
+    public bool HasPartyMatchEntry(ISession session)
+    {
+        return _partyMatchEntries.Values.Any(entry =>
+            entry?.Party != null && entry.Party.Members.Any(partyMember => partyMember.Guid == session.Guid));
+    }
+
+    public List<IPartyMatchEntry?> GetPartyMatchEntries()
+    {
+        return _partyMatchEntries.Values.ToList();
+    }
+
+    public IPartyMatchEntry? GetPartyMatchEntry(int id)
+    {
+        return _partyMatchEntries.TryGetValue(id, out IPartyMatchEntry? value) ? value : null;
+    }
+
+    public IPartyMatchEntry? GetPartyMatchEntry(IParty party)
+    {
+        return _partyMatchEntries.Values.FirstOrDefault(partyMatchEntry => partyMatchEntry?.Party == party) ?? null;
+    }
+
+    public void AddPartyMatchEntry(IPartyMatchEntry partyMatchEntry)
+    {
+        _partyMatchEntries.AddOrUpdate(partyMatchEntry.MatchId, partyMatchEntry, (_, _) => partyMatchEntry);
+    }
+
+    public void RemovePartyMatchEntry(int id)
+    {
+        _partyMatchEntries.Remove(id, out _);
+    }
+
+    public void RemovePartyMatchEntry(IParty party)
+    {
+        IPartyMatchEntry? removingEntry =
+            _partyMatchEntries.Values.FirstOrDefault(partyMatchEntry =>
+                partyMatchEntry?.Party != null && partyMatchEntry.Party.PartyId == party.PartyId);
+        if (removingEntry != null) _partyMatchEntries.Remove(removingEntry.MatchId, out _);
+    }
+
+    public bool HasPartyMatchEntry(IParty party)
+    {
+        IPartyMatchEntry? removingEntry =
+            _partyMatchEntries.Values.FirstOrDefault(partyMatchEntry =>
+                partyMatchEntry?.Party != null && partyMatchEntry.Party.PartyId == party.PartyId);
+        return removingEntry != null;
+    }
+
+    public bool HasPartyMatchEntry(int id)
+    {
+        return _partyMatchEntries.ContainsKey(id);
+    }
+}
