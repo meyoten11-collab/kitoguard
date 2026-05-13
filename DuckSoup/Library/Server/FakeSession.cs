@@ -116,6 +116,12 @@ public class FakeSession : TcpSession, IFakeSession
                 message = $"[C -> P] {packetType} Packet: 0x{packet.MsgId:X} - {Id}";
                 Log.Verbose(message);
 
+                if (!PacketRateLimiter.IsAllowed(Session, packet, nameof(FakeSession)))
+                {
+                    Session.Disconnect();
+                    return;
+                }
+
                 if (EventFactory.HasSubscriptions(EventFactoryNames.OnClientReceivePacket))
                 {
                     EventFactory.Publish(EventFactoryNames.OnClientReceivePacket, DateTime.Now, FakeServer.Service.ServerType, Session, new Packet(packet));
