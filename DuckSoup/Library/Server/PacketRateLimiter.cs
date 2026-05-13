@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using API.Enums;
 using API.Session;
+using API.ServiceFactory;
+using API.Services;
 using PacketLibrary.Handler;
 using Serilog;
 using SilkroadSecurityAPI.Message;
@@ -39,17 +42,45 @@ public static class PacketRateLimiter
         {
             Log.Warning("{0} flood protection disconnected session {1} from {2} for opcode 0x{3:X}",
                 source, session.Guid, session.RemoteEndPoint, packet.MsgId);
+            RecordSecurityEvent(session, packet, source);
         }
 
         Cleanup(session, state, now);
         return allowed;
     }
 
+    private static void RecordSecurityEvent(ISession session, Packet packet, string source)
+    {
+        try
+        {
+            if (!ServiceFactory.IsProvidedFor(typeof(ISecurityEventService)))
+            {
+                return;
+            }
+
+            ISecurityEventService securityEventService = ServiceFactory.Load<ISecurityEventService>(typeof(ISecurityEventService));
+            securityEventService.Record(
+                "PacketFloodDisconnected",
+                SecurityEventSeverity.High,
+                source,
+                session,
+                packet.MsgId,
+                $"Packet rate limit exceeded for opcode 0x{packet.MsgId:X}",
+                null);
+        }
+        catch (Exception exception)
+        {
+            Log.Warning("PacketRateLimiter could not record security event: {0}", exception.Message);
+        }
+    }
+
     private static PacketRateState GetState(ISession session)
     {
-        session.GetData(Data.PacketRateState, out PacketRateState? state, null);
-        if (state != null)
+        PacketRateState state;
+        session.HasData(Data.PacketRateState, out bool hasState);
+        if (hasState)
         {
+            session.GetData(Data.PacketRateState, out state, null);
             return state;
         }
 

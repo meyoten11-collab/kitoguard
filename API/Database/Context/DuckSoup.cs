@@ -12,6 +12,8 @@ public partial class DuckSoup : DuckContext
 
     public virtual DbSet<Machine> Machines { get; set; }
 
+    public virtual DbSet<SecurityEvent> SecurityEvents { get; set; }
+
     public virtual DbSet<Service> Services { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
@@ -39,6 +41,25 @@ public partial class DuckSoup : DuckContext
             entity.ToTable("Machine");
 
             entity.Property(e => e.Address).HasMaxLength(15);
+        });
+
+        modelBuilder.Entity<SecurityEvent>(entity =>
+        {
+            entity.HasKey(e => e.SecurityEventId).HasName("PK_dbo.SecurityEvent");
+
+            entity.ToTable("SecurityEvent");
+
+            entity.HasIndex(e => e.TimestampUtc, "IX_SecurityEvent_TimestampUtc");
+
+            entity.HasIndex(e => e.EventType, "IX_SecurityEvent_EventType");
+
+            entity.Property(e => e.EventType).HasMaxLength(100);
+
+            entity.Property(e => e.Source).HasMaxLength(100);
+
+            entity.Property(e => e.RemoteEndPoint).HasMaxLength(100);
+
+            entity.Property(e => e.CharacterName).HasMaxLength(64);
         });
 
         modelBuilder.Entity<Service>(entity =>

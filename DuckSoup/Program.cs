@@ -67,6 +67,7 @@ public static class Program
             SharedObjects sharedObjects = new SharedObjects();
             UserService userService = new UserService();
             AuthService authService = new AuthService();
+            SecurityEventService securityEventService = new SecurityEventService();
             PartyManager partyManager = new PartyManager();
             ServerManager serverManager = new ServerManager();
             //WebserverManager webserverManager = new WebserverManager();
