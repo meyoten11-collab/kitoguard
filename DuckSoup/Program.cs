@@ -69,7 +69,7 @@ public static class Program
             AuthService authService = new AuthService();
             PartyManager partyManager = new PartyManager();
             ServerManager serverManager = new ServerManager();
-            //WebserverManager webserverManager = new WebserverManager();
+            WebserverManager webserverManager = new WebserverManager();
             CommandManager commandManager = new CommandManager();
             PluginManager pluginManager = new PluginManager();
             EventManager eventManager = new EventManager();
