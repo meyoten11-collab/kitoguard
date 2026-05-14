@@ -1,0 +1,49 @@
+{
+  "brand": {
+    "name": "KitoGuard-S500",
+    "tagline": "vSro-iSro R Filtre Sistem Koruyucusu",
+    "subTagline": "Premium Web Paneli | Filtre Yönetimi | Premium Arayüz",
+    "shieldAlt": "KitoGuard-S500 kalkan logosu"
+  },
+  "pills": {
+    "secure": "Güvenli",
+    "fast": "Hızlı",
+    "powerful": "Güçlü",
+    "scalable": "Ölçeklenebilir"
+  },
+  "footer": {
+    "credit": "© KitoGuard-S500 · Ahmed Yasser tarafından geliştirildi — Owner of This System"
+  },
+  "common": {
+    "loading": "Yükleniyor…",
+    "language": "Dil",
+    "direction": "Yön",
+    "numerals": "Rakamlar",
+    "numeralsLatin": "Latin (0–9)",
+    "numeralsArabicIndic": "Arap-Hint (٠–٩)",
+    "skipToContent": "İçeriğe atla"
+  },
+  "home": {
+    "welcomeTitle": "KitoGuard-S500'e hoş geldiniz",
+    "welcomeBody": "KitoGuard-S500 web paneli hazırlanıyor. AppShell, kenar çubuğu, kontrol paneli ve filtre ayarları önümüzdeki haftalarda yayınlanacak.",
+    "currentLocale": "Geçerli dil",
+    "switchLocale": "Dili değiştir",
+    "currentDirection": "Metin yönü"
+  },
+  "nav": {
+    "dashboard": "Kontrol Paneli",
+    "serverStatus": "Sunucu Durumu",
+    "filterSettings": "Filtre Ayarları",
+    "pluginManager": "Eklenti Yöneticisi",
+    "ipManagement": "IP Yönetimi",
+    "hwidManagement": "HWID Yönetimi",
+    "banManagement": "Yasak Yönetimi",
+    "iconManager": "Simge Yöneticisi",
+    "titleManager": "Unvan Yöneticisi",
+    "eventSettings": "Olay Ayarları",
+    "backupRestore": "Yedekleme ve Geri Yükleme",
+    "autoTasks": "Otomatik Görevler",
+    "systemLogs": "Sistem Günlükleri",
+    "apiWebhooks": "API ve Webhooks"
+  }
+}

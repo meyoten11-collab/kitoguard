@@ -1,0 +1,49 @@
+{
+  "brand": {
+    "name": "KitoGuard-S500",
+    "tagline": "vSro-iSro R Filter System Guard",
+    "subTagline": "Premium Web Panel | Filter Management | Premium UI",
+    "shieldAlt": "KitoGuard-S500 shield logo"
+  },
+  "pills": {
+    "secure": "Secure",
+    "fast": "Fast",
+    "powerful": "Powerful",
+    "scalable": "Scalable"
+  },
+  "footer": {
+    "credit": "© KitoGuard-S500 · Developed by Ahmed Yasser — Owner of This System"
+  },
+  "common": {
+    "loading": "Loading…",
+    "language": "Language",
+    "direction": "Direction",
+    "numerals": "Numerals",
+    "numeralsLatin": "Latin (0–9)",
+    "numeralsArabicIndic": "Arabic-Indic (٠–٩)",
+    "skipToContent": "Skip to content"
+  },
+  "home": {
+    "welcomeTitle": "Welcome to KitoGuard-S500",
+    "welcomeBody": "The KitoGuard-S500 web panel is being scaffolded. AppShell, Sidebar, Dashboard and Filter Settings land in upcoming weeks.",
+    "currentLocale": "Current locale",
+    "switchLocale": "Switch language",
+    "currentDirection": "Text direction"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "serverStatus": "Server Status",
+    "filterSettings": "Filter Settings",
+    "pluginManager": "Plugin Manager",
+    "ipManagement": "IP Management",
+    "hwidManagement": "HWID Management",
+    "banManagement": "Ban Management",
+    "iconManager": "Icon Manager",
+    "titleManager": "Title Manager",
+    "eventSettings": "Event Settings",
+    "backupRestore": "Backup & Restore",
+    "autoTasks": "Auto Tasks",
+    "systemLogs": "System Logs",
+    "apiWebhooks": "API & Webhooks"
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "name": "@kitoguard/web",
+  "version": "0.0.0",
+  "private": true,
+  "description": "KitoGuard-S500 web panel — vSro-iSro R Filter System Guard",
+  "license": "SEE LICENSE.txt",
+  "author": "Ahmed Yasser — Owner of This System",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint --max-warnings=0",
+    "typecheck": "tsc --noEmit",
+    "test": "echo \"web tests will be added in W1.1+\" && exit 0"
+  },
+  "dependencies": {
+    "@radix-ui/react-slot": "1.1.0",
+    "class-variance-authority": "0.7.0",
+    "clsx": "2.1.1",
+    "lucide-react": "0.460.0",
+    "next": "15.0.3",
+    "next-intl": "3.25.1",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "tailwind-merge": "2.5.4"
+  },
+  "devDependencies": {
+    "@types/node": "20.17.6",
+    "@types/react": "18.3.12",
+    "@types/react-dom": "18.3.1",
+    "autoprefixer": "10.4.20",
+    "eslint": "8.57.1",
+    "eslint-config-next": "15.0.3",
+    "postcss": "8.4.49",
+    "tailwindcss": "3.4.15",
+    "typescript": "5.6.3"
+  }
+}

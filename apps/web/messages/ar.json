@@ -1,0 +1,49 @@
+{
+  "brand": {
+    "name": "KitoGuard-S500",
+    "tagline": "نظام حماية الفلتر لـ vSro و iSro R",
+    "subTagline": "لوحة ويب احترافية | إدارة الفلاتر | واجهة استخدام متميزة",
+    "shieldAlt": "شعار درع KitoGuard-S500"
+  },
+  "pills": {
+    "secure": "آمن",
+    "fast": "سريع",
+    "powerful": "قوي",
+    "scalable": "قابل للتوسع"
+  },
+  "footer": {
+    "credit": "© KitoGuard-S500 · تم التطوير بواسطة أحمد ياسر — Owner of This System"
+  },
+  "common": {
+    "loading": "جاري التحميل…",
+    "language": "اللغة",
+    "direction": "الاتجاه",
+    "numerals": "الأرقام",
+    "numeralsLatin": "لاتينية (0–9)",
+    "numeralsArabicIndic": "هندية-عربية (٠–٩)",
+    "skipToContent": "تخطي إلى المحتوى"
+  },
+  "home": {
+    "welcomeTitle": "مرحبًا بك في KitoGuard-S500",
+    "welcomeBody": "يتم الآن تجهيز لوحة الويب الخاصة بـ KitoGuard-S500. سيتم إصدار AppShell والشريط الجانبي ولوحة التحكم وإعدادات الفلتر في الأسابيع القادمة.",
+    "currentLocale": "اللغة الحالية",
+    "switchLocale": "تبديل اللغة",
+    "currentDirection": "اتجاه النص"
+  },
+  "nav": {
+    "dashboard": "لوحة التحكم",
+    "serverStatus": "حالة الخادم",
+    "filterSettings": "إعدادات الفلتر",
+    "pluginManager": "إدارة الإضافات",
+    "ipManagement": "إدارة عناوين IP",
+    "hwidManagement": "إدارة HWID",
+    "banManagement": "إدارة الحظر",
+    "iconManager": "إدارة الأيقونات",
+    "titleManager": "إدارة الألقاب",
+    "eventSettings": "إعدادات الأحداث",
+    "backupRestore": "النسخ الاحتياطي والاستعادة",
+    "autoTasks": "المهام التلقائية",
+    "systemLogs": "سجلات النظام",
+    "apiWebhooks": "API و Webhooks"
+  }
+}

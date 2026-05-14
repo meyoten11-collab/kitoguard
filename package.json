@@ -1,0 +1,20 @@
+{
+  "name": "kitoguard-s500",
+  "version": "0.0.0",
+  "private": true,
+  "description": "KitoGuard-S500 — vSro-iSro R Filter System Guard. Premium Web Panel | Filter Management | Premium UI",
+  "license": "SEE LICENSE.txt",
+  "author": "Ahmed Yasser — Owner of This System",
+  "scripts": {
+    "web:dev": "pnpm --filter @kitoguard/web dev",
+    "web:build": "pnpm --filter @kitoguard/web build",
+    "web:lint": "pnpm --filter @kitoguard/web lint",
+    "web:typecheck": "pnpm --filter @kitoguard/web typecheck",
+    "web:test": "pnpm --filter @kitoguard/web test"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "packageManager": "pnpm@9.15.1"
+}
