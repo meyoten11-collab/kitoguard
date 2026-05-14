@@ -1,4 +1,4 @@
-﻿#region
+#region
 
 using System;
 using System.Diagnostics;
@@ -48,16 +48,24 @@ public static class Program
 
         // prints out logo + version
         Log.Information("\n\n" +
-                        ",--.          .   .---.             \n" +
-                        "|   \\ . . ,-. | , \\___  ,-. . . ,-. \n" +
-                        "|   / | | |   |<      \\ | | | | | | \n" +
-                        "^--'  `-^ `-' ' ` `---' `-' `-^ |-' \n" +
-                        "                                |   \n" +
-                        "         Version  {0}         ' \n" +
+                        "╔════════════════════════════════════════════════════════════╗\n" +
+                        "║                                                            ║\n" +
+                        "║  ╭───────────────────────────────────────────────────────╮ ║\n" +
+                        "║  │   _  __  _  _      ___  _  _   _   ____  ___         │ ║\n" +
+                        "║  │  | |/ / (_)/ \\    / __\\/ / \\ | | / _  \\/ _ \\        │ ║\n" +
+                        "║  │  |   <  | ( o )  | \\__ \\\\ / / | | | ||_  | __/        │ ║\n" +
+                        "║  │  |_|\\_\\| |\\__/   \\___/_\\_\\ |_|_\\ \\__/ |_|          │ ║\n" +
+                        "║  │                                                       │ ║\n" +
+                        "║  │         S500 FilterSystem By Ahmed Yasser             │ ║\n" +
+                        "║  │                                                       │ ║\n" +
+                        "║  │              Version {0}                         │ ║\n" +
+                        "║  ╰───────────────────────────────────────────────────────╯ ║\n" +
+                        "║                                                            ║\n" +
+                        "╚════════════════════════════════════════════════════════════╝\n" +
                         "\n",
             FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location)
                 .ProductVersion);
-        Console.Title = "Starting up...";
+        Console.Title = "KitoGuard-S500 FilterSystem Starting up...";
 
         try
         {
