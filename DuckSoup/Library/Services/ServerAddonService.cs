@@ -140,6 +140,113 @@ public class ServerAddonService : Service<IServerAddonService>, IServerAddonServ
             .ToList();
     }
 
+    public ServerAddonPanelCatalog GetEnglishPanelCatalog()
+    {
+        return new ServerAddonPanelCatalog
+        {
+            Title = "KitoGuard vSRO 1.188 Web Filter",
+            Summary =
+                "English admin catalog for the Multi-Server, Job Equipment, and ServerAddon controls shown in the reference video.",
+            OperatorNotes = new[]
+            {
+                "Use the Multi-Server section to pick the Gateway, Agent, Download, or shard service before applying rules.",
+                "Use Job Equipment only on staging/disposable characters until the item pool policy is approved.",
+                "Use ServerAddon actions only from trusted admin roles because they mutate live game state.",
+                "Keep dangerous action IDs disabled in production until per-server policy is configured."
+            },
+            Sections = new[]
+            {
+                new ServerAddonPanelSection
+                {
+                    Name = "Multi-Server Management",
+                    Summary = "English controls for every configured DuckSoup service.",
+                    Features = new[]
+                    {
+                        new ServerAddonPanelFeature
+                        {
+                            Code = "multi-server.selector",
+                            Name = "Server selector",
+                            Summary = "Lists configured filter services with name, server type, bind port, remote endpoint, and auto-start state.",
+                            Status = "Backend ready",
+                            Commands = new[] { "serveraddon servers" },
+                            ApiRoutes = new[] { "GET /api/v1/serveraddon/servers" }
+                        },
+                        new ServerAddonPanelFeature
+                        {
+                            Code = "multi-server.policy",
+                            Name = "Per-server policy",
+                            Summary = "Future panel work: connect each server to its own rate limits, opcode rules, and addon permissions.",
+                            Status = "Planned"
+                        }
+                    }
+                },
+                new ServerAddonPanelSection
+                {
+                    Name = "Job Equipment System",
+                    Summary = "English GM flow for granting job equipment through the server-files-side addon queue.",
+                    Features = new[]
+                    {
+                        new ServerAddonPanelFeature
+                        {
+                            Code = "job-equipment.grant",
+                            Name = "Grant job equipment",
+                            Summary = "Queues an AddItem action using clear fields: character, item code, quantity, and plus level.",
+                            Status = "Backend ready",
+                            Commands = new[] { "serveraddon job-equipment <charName> <itemCodeName128> [quantity] [plus]" },
+                            ApiRoutes = new[] { "POST /api/v1/serveraddon/job-equipment" }
+                        },
+                        new ServerAddonPanelFeature
+                        {
+                            Code = "job-equipment.pool",
+                            Name = "Auto equipment pools",
+                            Summary = "Future panel work: define level/class/job equipment pools and approval rules before automatic grants.",
+                            Status = "Planned"
+                        }
+                    }
+                },
+                new ServerAddonPanelSection
+                {
+                    Name = "ServerAddon Control Center",
+                    Summary = "English action queue/status controls for JellyBitz-style vSRO ServerAddon integration.",
+                    Features = new[]
+                    {
+                        new ServerAddonPanelFeature
+                        {
+                            Code = "serveraddon.health",
+                            Name = "Queue health",
+                            Summary = "Shows whether _ExeGameServer is available and counts pending, completed, and failed actions.",
+                            Status = "Backend ready",
+                            Commands = new[] { "serveraddon status", "serveraddon recent 20" },
+                            ApiRoutes = new[]
+                            {
+                                "GET /api/v1/serveraddon/health",
+                                "GET /api/v1/serveraddon/actions/recent?limit=20"
+                            }
+                        },
+                        new ServerAddonPanelFeature
+                        {
+                            Code = "serveraddon.actions",
+                            Name = "English action catalog",
+                            Summary = "Lists all supported action IDs with English names and parameter meanings.",
+                            Status = "Backend ready",
+                            Commands = new[] { "serveraddon actions" },
+                            ApiRoutes = new[] { "GET /api/v1/serveraddon/actions" }
+                        },
+                        new ServerAddonPanelFeature
+                        {
+                            Code = "serveraddon.queue",
+                            Name = "Queue raw action",
+                            Summary = "Queues a raw addon action for advanced operators who know the action ID and parameters.",
+                            Status = "Backend ready",
+                            Commands = new[] { "serveraddon queue <actionId> <charName|-for-empty> [params]" },
+                            ApiRoutes = new[] { "POST /api/v1/serveraddon/actions" }
+                        }
+                    }
+                }
+            }
+        };
+    }
+
     public ServerAddonHealth GetHealth()
     {
         try

@@ -21,6 +21,7 @@ public class ServerAddonRoutes
         _serverAddonService = ServiceFactory.Load<IServerAddonService>(typeof(IServerAddonService));
 
         webserverManager.addStaticRoute(HttpMethod.GET, "/api/v1/serveraddon/health", HealthRoute);
+        webserverManager.addStaticRoute(HttpMethod.GET, "/api/v1/serveraddon/catalog", CatalogRoute);
         webserverManager.addStaticRoute(HttpMethod.GET, "/api/v1/serveraddon/actions", ActionsRoute);
         webserverManager.addStaticRoute(HttpMethod.GET, "/api/v1/serveraddon/actions/recent", RecentRoute);
         webserverManager.addStaticRoute(HttpMethod.POST, "/api/v1/serveraddon/actions", QueueRoute);
@@ -55,6 +56,13 @@ public class ServerAddonRoutes
 
         ctx.Response.StatusCode = 200;
         await ctx.Response.Send(JsonSerializer.Serialize(_serverAddonService.GetRecentActions(limit)));
+    }
+
+    private async Task CatalogRoute(HttpContextBase ctx)
+    {
+        ctx.Response.ContentType = "application/json";
+        ctx.Response.StatusCode = 200;
+        await ctx.Response.Send(JsonSerializer.Serialize(_serverAddonService.GetEnglishPanelCatalog()));
     }
 
     private async Task ActionsRoute(HttpContextBase ctx)

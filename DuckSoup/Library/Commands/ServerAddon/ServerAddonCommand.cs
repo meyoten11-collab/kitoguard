@@ -19,6 +19,7 @@ public class ServerAddonCommand : Command
         SubCommands.Add(new ServerAddonActionsCommand());
         SubCommands.Add(new ServerAddonServersCommand());
         SubCommands.Add(new ServerAddonJobEquipmentCommand());
+        SubCommands.Add(new ServerAddonCatalogCommand());
     }
 
     public override void Execute(string[]? args)
