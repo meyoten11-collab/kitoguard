@@ -84,6 +84,15 @@ function HomeContent({ locale }: { locale: string }) {
             );
           })}
         </nav>
+
+        <Link
+          href="/dashboard"
+          className="inline-flex items-center gap-2 rounded-md bg-brand px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-600"
+          data-testid="open-dashboard-preview"
+        >
+          {t("home.openDashboard")}
+          <ChevronRight className="dir-flip h-4 w-4" aria-hidden="true" />
+        </Link>
       </main>
       <FooterCredit />
     </div>

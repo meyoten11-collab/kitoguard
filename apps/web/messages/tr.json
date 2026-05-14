@@ -1,7 +1,7 @@
 {
   "brand": {
     "name": "KitoGuard-S500",
-    "tagline": "vSro-iSro R Filtre Sistem Koruyucusu",
+    "tagline": "vSro-iSro R Filter System Guard",
     "subTagline": "Premium Web Paneli | Filtre Yönetimi | Premium Arayüz",
     "shieldAlt": "KitoGuard-S500 kalkan logosu"
   },
@@ -12,38 +12,208 @@
     "scalable": "Ölçeklenebilir"
   },
   "footer": {
-    "credit": "© KitoGuard-S500 · Ahmed Yasser tarafından geliştirildi — Owner of This System"
+    "credit": "© KitoGuard-S500 · Geliştirici: Ahmed Yasser — Bu Sistemin Sahibi"
   },
   "common": {
     "loading": "Yükleniyor…",
+    "error": "Yüklenemedi. Tekrar denensin mi?",
+    "retry": "Yeniden dene",
     "language": "Dil",
     "direction": "Yön",
     "numerals": "Rakamlar",
     "numeralsLatin": "Latin (0–9)",
     "numeralsArabicIndic": "Arap-Hint (٠–٩)",
-    "skipToContent": "İçeriğe atla"
+    "skipToContent": "İçeriğe atla",
+    "viewAll": "Tümünü gör",
+    "manage": "Yönet",
+    "edit": "Düzenle",
+    "delete": "Sil",
+    "yes": "Evet",
+    "no": "Hayır",
+    "online": "Çevrimiçi",
+    "offline": "Çevrimdışı",
+    "degraded": "Düşük",
+    "pending": "Bekliyor"
   },
   "home": {
     "welcomeTitle": "KitoGuard-S500'e hoş geldiniz",
-    "welcomeBody": "KitoGuard-S500 web paneli hazırlanıyor. AppShell, kenar çubuğu, kontrol paneli ve filtre ayarları önümüzdeki haftalarda yayınlanacak.",
-    "currentLocale": "Geçerli dil",
+    "welcomeBody": "Web paneli iskelet aşamasında. AppShell, Sidebar, Dashboard ve Filter Settings önümüzdeki haftalarda yayınlanacak.",
+    "currentLocale": "Mevcut dil",
     "switchLocale": "Dili değiştir",
-    "currentDirection": "Metin yönü"
+    "currentDirection": "Metin yönü",
+    "openDashboard": "Dashboard önizlemesini aç"
   },
   "nav": {
-    "dashboard": "Kontrol Paneli",
+    "dashboard": "Dashboard",
     "serverStatus": "Sunucu Durumu",
     "filterSettings": "Filtre Ayarları",
-    "pluginManager": "Eklenti Yöneticisi",
+    "pluginManager": "Plugin Yöneticisi",
     "ipManagement": "IP Yönetimi",
     "hwidManagement": "HWID Yönetimi",
-    "banManagement": "Yasak Yönetimi",
-    "iconManager": "Simge Yöneticisi",
+    "banManagement": "Ban Yönetimi",
+    "iconManager": "İkon Yöneticisi",
     "titleManager": "Unvan Yöneticisi",
-    "eventSettings": "Olay Ayarları",
+    "eventSettings": "Etkinlik Ayarları",
     "backupRestore": "Yedekleme ve Geri Yükleme",
     "autoTasks": "Otomatik Görevler",
     "systemLogs": "Sistem Günlükleri",
-    "apiWebhooks": "API ve Webhooks"
+    "apiWebhooks": "API ve Webhook'lar"
+  },
+  "shell": {
+    "appshellPlaceholderTitle": "AppShell yer tutucu",
+    "appshellPlaceholderBody": "Tam Sidebar / TopBar / kullanıcı menüsü W1 (§C.1) ile geliyor. Bu hafif layout, gerçek shell hazır olana kadar W2 dashboard'unun bağımsız çalışması için bilinçli olarak bırakıldı."
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "subtitle": "KitoGuard-S500 filtre ve oyun sunucularının canlı özeti",
+    "kpi": {
+      "onlinePlayers": "Çevrimiçi Oyuncular",
+      "onlinePlayersFooter": "Oyuncu listesini gör",
+      "uptime": "Çalışma süresi",
+      "uptimeFooter": "Sistem sağlığını gör",
+      "activeEvents": "Aktif Etkinlikler",
+      "activeEventsFooter": "Etkinlikleri yönet",
+      "activePlugins": "Aktif Pluginler",
+      "activePluginsFooter": "Plugin yöneticisini aç",
+      "serversOnline": "Çevrimiçi Sunucular",
+      "serversOnlineFooter": "Sunucu durumunu gör",
+      "activeAttacks": "Aktif Saldırılar",
+      "activeAttacksFooter": "Güvenlik panelini aç"
+    },
+    "control": {
+      "title": "Filtre Kontrolü",
+      "start": "Başlat",
+      "stop": "Durdur",
+      "restart": "Yeniden başlat",
+      "running": "Çalışıyor",
+      "stopped": "Durdu",
+      "transitioning": "İşleniyor…",
+      "lastChange": "Son değişiklik",
+      "audited": "Tüm işlemler denetlenir"
+    },
+    "filterStatus": {
+      "title": "Filtre Durumu",
+      "gateway": "Gateway",
+      "agent": "Agent",
+      "download": "Download"
+    },
+    "serverInfo": {
+      "title": "Sunucu Bilgileri",
+      "currentTime": "Şu anki saat",
+      "serverLoad": "Sunucu yükü",
+      "totalConnections": "Toplam bağlantı",
+      "peak24h": "Zirve (24s)"
+    },
+    "liveChart": {
+      "title": "Canlı performans",
+      "subtitle": "Son 60 dakika",
+      "playersSeries": "Oyuncular",
+      "connectionsSeries": "Bağlantılar",
+      "ppsSeries": "Paket/s",
+      "live": "Canlı"
+    },
+    "systemResources": {
+      "title": "Sistem Kaynakları",
+      "cpu": "CPU",
+      "ram": "RAM",
+      "disk": "Disk",
+      "network": "Ağ"
+    },
+    "logs": {
+      "title": "Son Olaylar",
+      "viewAll": "Tüm günlükleri gör",
+      "severity": "Seviye",
+      "source": "Kaynak",
+      "message": "Mesaj",
+      "time": "Zaman",
+      "info": "Bilgi",
+      "success": "Başarılı",
+      "warn": "Uyarı",
+      "error": "Hata"
+    },
+    "ranking": {
+      "title": "En İyi Oyuncular (24s)",
+      "rank": "#",
+      "player": "Oyuncu",
+      "level": "Seviye",
+      "kills": "Öldürme",
+      "viewAll": "Tüm sıralamaları gör"
+    },
+    "events": {
+      "title": "Aktif Etkinlikler",
+      "endsIn": "Bitiş",
+      "startsIn": "Başlangıç",
+      "live": "Canlı",
+      "scheduled": "Planlı",
+      "ended": "Bitti",
+      "manage": "Etkinlikleri yönet"
+    },
+    "plugins": {
+      "title": "Pluginler",
+      "name": "Plugin",
+      "version": "Sürüm",
+      "status": "Durum",
+      "author": "Yazar",
+      "actions": "İşlemler",
+      "enabled": "Etkin",
+      "disabled": "Devre dışı",
+      "viewAll": "Plugin yöneticisini aç",
+      "toggleOn": "Etkinleştir",
+      "toggleOff": "Devre dışı bırak"
+    },
+    "uniqueTracker": {
+      "title": "Unique Takip",
+      "subtitle": "Canlı unique spawn radarı",
+      "alive": "Canlı",
+      "dead": "Ölü",
+      "respawnIn": "Yeniden doğum",
+      "location": "Konum",
+      "lastUpdate": "Son güncelleme",
+      "refresh": "Yenile"
+    },
+    "iconMenu": {
+      "title": "Sağ İkon Menüsü Önizlemesi",
+      "subtitle": "Oyun içi ikon düzeni (16 yuva)",
+      "customize": "İkonları özelleştir",
+      "emptySlot": "Boş yuva"
+    }
+  },
+  "featureRibbon": {
+    "mainFeatures": "Ana Özellikler",
+    "securitySystems": "Güvenlik Sistemleri",
+    "ingameSystems": "Oyun İçi Sistemler",
+    "pluginArchitecture": "Plugin Mimarisi",
+    "rightIconMenu": "Sağ İkon Menüsü",
+    "mainFeaturesBody": "Otomatik Etkinlikler · Unique Takip · Hasar Sayacı",
+    "securitySystemsBody": "Anti-Cheat · Otomatik Ban · DDoS Koruma · HWID/IP",
+    "ingameSystemsBody": "PvP Modları · Kale Savaşı · Parti · İş Donanımı",
+    "pluginArchitectureBody": "Sıcak yüklenen pluginler · İmzalı manifest · Webhooks",
+    "rightIconMenuBody": "Operatör tarafından yönetilen oyun içi ikon şeridi"
+  },
+  "uniques": {
+    "tigerGirl": "Tiger Girl",
+    "cerberus": "Cerberus",
+    "captainIvy": "Captain Ivy",
+    "uruchi": "Uruchi",
+    "isyutaru": "Isyutaru",
+    "lordYarkan": "Lord Yarkan",
+    "demonShaitan": "Demon Shaitan",
+    "bonelordYuno": "Bonelord Yuno",
+    "roc": "Roc",
+    "whiteKnight": "White Knight",
+    "soso": "Soso",
+    "bkRabbit": "BK Rabbit"
+  },
+  "events": {
+    "survivalArena": "Hayatta Kalma Arenası",
+    "captureTheFlag": "Bayrak Kapmaca",
+    "jobWar": "İş Savaşı",
+    "fortressWar": "Kale Savaşı",
+    "defendTheTower": "Kuleyi Savun",
+    "lastManStanding": "Son Adam Ayakta",
+    "drunk": "Sarhoş",
+    "horseRace": "At Yarışı",
+    "luckyStall": "Şanslı Tezgah",
+    "xsmb": "XSMB"
   }
 }

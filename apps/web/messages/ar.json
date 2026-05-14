@@ -1,8 +1,8 @@
 {
   "brand": {
     "name": "KitoGuard-S500",
-    "tagline": "نظام حماية الفلتر لـ vSro و iSro R",
-    "subTagline": "لوحة ويب احترافية | إدارة الفلاتر | واجهة استخدام متميزة",
+    "tagline": "نظام حماية فلتر vSro-iSro R",
+    "subTagline": "لوحة ويب احترافية | إدارة الفلتر | واجهة بريميوم",
     "shieldAlt": "شعار درع KitoGuard-S500"
   },
   "pills": {
@@ -12,38 +12,208 @@
     "scalable": "قابل للتوسع"
   },
   "footer": {
-    "credit": "© KitoGuard-S500 · تم التطوير بواسطة أحمد ياسر — Owner of This System"
+    "credit": "© KitoGuard-S500 · طوّره أحمد ياسر — مالك هذا النظام"
   },
   "common": {
-    "loading": "جاري التحميل…",
+    "loading": "جارٍ التحميل…",
+    "error": "فشل التحميل. هل تريد المحاولة مرة أخرى؟",
+    "retry": "إعادة المحاولة",
     "language": "اللغة",
     "direction": "الاتجاه",
     "numerals": "الأرقام",
     "numeralsLatin": "لاتينية (0–9)",
-    "numeralsArabicIndic": "هندية-عربية (٠–٩)",
-    "skipToContent": "تخطي إلى المحتوى"
+    "numeralsArabicIndic": "عربية هندية (٠–٩)",
+    "skipToContent": "تخطّي إلى المحتوى",
+    "viewAll": "عرض الكل",
+    "manage": "إدارة",
+    "edit": "تعديل",
+    "delete": "حذف",
+    "yes": "نعم",
+    "no": "لا",
+    "online": "متصل",
+    "offline": "غير متصل",
+    "degraded": "ضعيف",
+    "pending": "قيد الانتظار"
   },
   "home": {
-    "welcomeTitle": "مرحبًا بك في KitoGuard-S500",
-    "welcomeBody": "يتم الآن تجهيز لوحة الويب الخاصة بـ KitoGuard-S500. سيتم إصدار AppShell والشريط الجانبي ولوحة التحكم وإعدادات الفلتر في الأسابيع القادمة.",
+    "welcomeTitle": "أهلًا بك في KitoGuard-S500",
+    "welcomeBody": "يتم تجهيز لوحة الويب حاليًا. سيتم إضافة AppShell والقائمة الجانبية ولوحة التحكم وإعدادات الفلتر في الأسابيع المقبلة.",
     "currentLocale": "اللغة الحالية",
     "switchLocale": "تبديل اللغة",
-    "currentDirection": "اتجاه النص"
+    "currentDirection": "اتجاه النص",
+    "openDashboard": "فتح معاينة لوحة التحكم"
   },
   "nav": {
     "dashboard": "لوحة التحكم",
-    "serverStatus": "حالة الخادم",
+    "serverStatus": "حالة الخوادم",
     "filterSettings": "إعدادات الفلتر",
-    "pluginManager": "إدارة الإضافات",
+    "pluginManager": "مدير الإضافات",
     "ipManagement": "إدارة عناوين IP",
     "hwidManagement": "إدارة HWID",
     "banManagement": "إدارة الحظر",
-    "iconManager": "إدارة الأيقونات",
-    "titleManager": "إدارة الألقاب",
-    "eventSettings": "إعدادات الأحداث",
+    "iconManager": "مدير الأيقونات",
+    "titleManager": "مدير الألقاب",
+    "eventSettings": "إعدادات الفعاليات",
     "backupRestore": "النسخ الاحتياطي والاستعادة",
     "autoTasks": "المهام التلقائية",
     "systemLogs": "سجلات النظام",
-    "apiWebhooks": "API و Webhooks"
+    "apiWebhooks": "واجهات API و Webhooks"
+  },
+  "shell": {
+    "appshellPlaceholderTitle": "هيكل التطبيق (مؤقت)",
+    "appshellPlaceholderBody": "القائمة الجانبية وشريط العنوان وقائمة المستخدم الكاملة ستصل في W1 (§C.1). هذا الإطار البسيط مقصود حتى تظهر لوحة W2 منفردة قبل وصول الهيكل الكامل."
+  },
+  "dashboard": {
+    "title": "لوحة التحكم",
+    "subtitle": "نظرة لحظية على فلتر KitoGuard-S500 وخوادم اللعبة",
+    "kpi": {
+      "onlinePlayers": "اللاعبون المتصلون",
+      "onlinePlayersFooter": "عرض قائمة اللاعبين",
+      "uptime": "زمن التشغيل",
+      "uptimeFooter": "عرض حالة النظام",
+      "activeEvents": "الفعاليات النشطة",
+      "activeEventsFooter": "إدارة الفعاليات",
+      "activePlugins": "الإضافات النشطة",
+      "activePluginsFooter": "فتح مدير الإضافات",
+      "serversOnline": "الخوادم المتصلة",
+      "serversOnlineFooter": "عرض حالة الخوادم",
+      "activeAttacks": "الهجمات النشطة",
+      "activeAttacksFooter": "فتح لوحة الأمان"
+    },
+    "control": {
+      "title": "التحكم بالفلتر",
+      "start": "تشغيل",
+      "stop": "إيقاف",
+      "restart": "إعادة تشغيل",
+      "running": "قيد التشغيل",
+      "stopped": "متوقف",
+      "transitioning": "جارٍ التنفيذ…",
+      "lastChange": "آخر تغيير",
+      "audited": "كل عملية يتم تسجيلها"
+    },
+    "filterStatus": {
+      "title": "حالة الفلتر",
+      "gateway": "Gateway",
+      "agent": "Agent",
+      "download": "Download"
+    },
+    "serverInfo": {
+      "title": "معلومات الخادم",
+      "currentTime": "الوقت الحالي",
+      "serverLoad": "حِمل الخادم",
+      "totalConnections": "إجمالي الاتصالات",
+      "peak24h": "الذروة (24س)"
+    },
+    "liveChart": {
+      "title": "الأداء المباشر",
+      "subtitle": "آخر 60 دقيقة",
+      "playersSeries": "اللاعبون",
+      "connectionsSeries": "الاتصالات",
+      "ppsSeries": "حِزَم/ث",
+      "live": "مباشر"
+    },
+    "systemResources": {
+      "title": "موارد النظام",
+      "cpu": "المعالج",
+      "ram": "الذاكرة",
+      "disk": "القرص",
+      "network": "الشبكة"
+    },
+    "logs": {
+      "title": "الأحداث الأخيرة",
+      "viewAll": "عرض كل السجلات",
+      "severity": "الخطورة",
+      "source": "المصدر",
+      "message": "الرسالة",
+      "time": "الوقت",
+      "info": "معلومة",
+      "success": "نجاح",
+      "warn": "تحذير",
+      "error": "خطأ"
+    },
+    "ranking": {
+      "title": "أعلى اللاعبين (24س)",
+      "rank": "#",
+      "player": "اللاعب",
+      "level": "المستوى",
+      "kills": "الإنجازات",
+      "viewAll": "عرض كل التصنيفات"
+    },
+    "events": {
+      "title": "الفعاليات النشطة",
+      "endsIn": "تنتهي خلال",
+      "startsIn": "تبدأ خلال",
+      "live": "مباشر",
+      "scheduled": "مجدول",
+      "ended": "انتهت",
+      "manage": "إدارة الفعاليات"
+    },
+    "plugins": {
+      "title": "الإضافات",
+      "name": "الإضافة",
+      "version": "الإصدار",
+      "status": "الحالة",
+      "author": "المؤلف",
+      "actions": "الإجراءات",
+      "enabled": "مفعّلة",
+      "disabled": "معطّلة",
+      "viewAll": "فتح مدير الإضافات",
+      "toggleOn": "تفعيل",
+      "toggleOff": "تعطيل"
+    },
+    "uniqueTracker": {
+      "title": "متتبع الـUniques",
+      "subtitle": "رادار ظهور الـUnique لحظيًا",
+      "alive": "حي",
+      "dead": "ميت",
+      "respawnIn": "يعود خلال",
+      "location": "الموقع",
+      "lastUpdate": "آخر تحديث",
+      "refresh": "تحديث"
+    },
+    "iconMenu": {
+      "title": "معاينة قائمة الأيقونات الجانبية",
+      "subtitle": "تخطيط الأيقونات داخل اللعبة (16 خانة)",
+      "customize": "تخصيص الأيقونات",
+      "emptySlot": "خانة فارغة"
+    }
+  },
+  "featureRibbon": {
+    "mainFeatures": "الميزات الرئيسية",
+    "securitySystems": "أنظمة الأمان",
+    "ingameSystems": "أنظمة داخل اللعبة",
+    "pluginArchitecture": "هيكل الإضافات",
+    "rightIconMenu": "قائمة الأيقونات اليمنى",
+    "mainFeaturesBody": "فعاليات تلقائية · متتبع Uniques · عدّاد الأضرار",
+    "securitySystemsBody": "مضاد الغش · الحظر التلقائي · حماية DDoS · HWID/IP",
+    "ingameSystemsBody": "أنماط PvP · حرب القلعة · الفِرَق · مجموعات المهن",
+    "pluginArchitectureBody": "إضافات قابلة للتحميل الساخن · مانيفست موقّع · Webhooks",
+    "rightIconMenuBody": "شريط أيقونات داخل اللعبة يديره المشغّل"
+  },
+  "uniques": {
+    "tigerGirl": "Tiger Girl",
+    "cerberus": "Cerberus",
+    "captainIvy": "Captain Ivy",
+    "uruchi": "Uruchi",
+    "isyutaru": "Isyutaru",
+    "lordYarkan": "Lord Yarkan",
+    "demonShaitan": "Demon Shaitan",
+    "bonelordYuno": "Bonelord Yuno",
+    "roc": "Roc",
+    "whiteKnight": "White Knight",
+    "soso": "Soso",
+    "bkRabbit": "BK Rabbit"
+  },
+  "events": {
+    "survivalArena": "ساحة البقاء",
+    "captureTheFlag": "احتلال العَلَم",
+    "jobWar": "حرب المهن",
+    "fortressWar": "حرب القلعة",
+    "defendTheTower": "الدفاع عن البرج",
+    "lastManStanding": "آخر الناجين",
+    "drunk": "السُكر",
+    "horseRace": "سباق الخيل",
+    "luckyStall": "المتجر المحظوظ",
+    "xsmb": "XSMB"
   }
 }
