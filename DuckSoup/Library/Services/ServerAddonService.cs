@@ -58,7 +58,7 @@ public class ServerAddonService : Service<IServerAddonService>, IServerAddonServ
         {
             Action_ID = (int)request.ActionType,
             Action_Result = (short)GameServerActionResult.Unknown,
-            CharName16 = request.CharName16,
+            CharName16 = request.CharName16 ?? string.Empty,
             Param01 = request.Param01,
             Param02 = request.Param02,
             Param03 = request.Param03,
@@ -72,7 +72,7 @@ public class ServerAddonService : Service<IServerAddonService>, IServerAddonServ
         context.ServerAddonGameServerActions.Add(action);
         context.SaveChanges();
 
-        Log.Information("Queued ServerAddon action {0} for {1} as row {2}", request.ActionType, request.CharName16,
+        Log.Information("Queued ServerAddon action {0} for {1} as row {2}", request.ActionType, action.CharName16,
             action.ID);
         return action;
     }
