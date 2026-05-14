@@ -16,6 +16,9 @@ public class ServerAddonCommand : Command
         SubCommands.Add(new ServerAddonStatusCommand());
         SubCommands.Add(new ServerAddonRecentCommand());
         SubCommands.Add(new ServerAddonQueueCommand());
+        SubCommands.Add(new ServerAddonActionsCommand());
+        SubCommands.Add(new ServerAddonServersCommand());
+        SubCommands.Add(new ServerAddonJobEquipmentCommand());
     }
 
     public override void Execute(string[]? args)

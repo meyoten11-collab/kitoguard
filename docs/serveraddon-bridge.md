@@ -27,6 +27,9 @@ serveraddon ensure
 serveraddon status
 serveraddon recent 20
 serveraddon queue <actionId> <charName|-for-empty> [param01|-for-empty] [param02] [param03] [param04] [param05] [param06] [param07] [param08]
+serveraddon actions
+serveraddon servers
+serveraddon job-equipment <charName> <itemCodeName128> [quantity] [plus]
 ```
 
 Aliases:
@@ -36,6 +39,8 @@ Aliases:
 - `status`: `health`
 - `recent`: `list`
 - `queue`: `add`
+- `actions`: `list-actions`
+- `servers`: `services`, `multi`
 
 ## Action IDs
 
@@ -88,6 +93,12 @@ serveraddon status
 serveraddon recent 10
 ```
 
+Queue a named job equipment grant:
+
+```text
+serveraddon job-equipment JellyBitz ITEM_CH_M_HEAVY_11_SET_A_RARE 1 5
+```
+
 ## API routes
 
 When the webserver is enabled, authenticated admins can also use:
@@ -95,8 +106,11 @@ When the webserver is enabled, authenticated admins can also use:
 | Method | Route | Purpose |
 | --- | --- | --- |
 | `GET` | `/api/v1/serveraddon/health` | Check queue table availability and counts |
+| `GET` | `/api/v1/serveraddon/actions` | List the English action catalog and parameter meanings |
 | `GET` | `/api/v1/serveraddon/actions/recent?limit=20` | List recent queue rows |
 | `POST` | `/api/v1/serveraddon/actions` | Queue a gameserver action |
+| `POST` | `/api/v1/serveraddon/job-equipment` | Queue an English job-equipment item grant |
+| `GET` | `/api/v1/serveraddon/servers` | List configured filter services for multi-server panels |
 
 Example request body:
 
@@ -110,6 +124,32 @@ Example request body:
   "param04": 3
 }
 ```
+
+Example job equipment grant body:
+
+```json
+{
+  "charName16": "JellyBitz",
+  "itemCodeName128": "ITEM_CH_M_HEAVY_11_SET_A_RARE",
+  "quantity": 1,
+  "plusLevel": 5,
+  "reason": "Job equipment reward"
+}
+```
+
+The job-equipment helper is intentionally a safe wrapper around action `1` (`AddItem`) so English
+GM panels can expose a clear "Job Equipment" form without requiring operators to memorize raw
+`Param01`-`Param08` fields.
+
+## English web-filter parity notes
+
+The referenced video is titled "Vsro V1.188 Web Filter | Job Equipment System | Multi Servers | For Rent".
+This bridge provides the English backend pieces for that style of panel:
+
+- `actions` gives the panel an English action catalog.
+- `job-equipment` exposes a named GM operation for item/equipment grants.
+- `servers` exposes configured DuckSoup services for a multi-server selector.
+- `health` and `recent` expose live queue state for operator feedback.
 
 ## Deployment notes
 
