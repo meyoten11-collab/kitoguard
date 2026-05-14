@@ -30,6 +30,7 @@ serveraddon queue <actionId> <charName|-for-empty> [param01|-for-empty] [param02
 serveraddon actions
 serveraddon servers
 serveraddon job-equipment <charName> <itemCodeName128> [quantity] [plus]
+serveraddon catalog
 ```
 
 Aliases:
@@ -41,6 +42,7 @@ Aliases:
 - `queue`: `add`
 - `actions`: `list-actions`
 - `servers`: `services`, `multi`
+- `catalog`: `panel`, `english`
 
 ## Action IDs
 
@@ -106,6 +108,7 @@ When the webserver is enabled, authenticated admins can also use:
 | Method | Route | Purpose |
 | --- | --- | --- |
 | `GET` | `/api/v1/serveraddon/health` | Check queue table availability and counts |
+| `GET` | `/api/v1/serveraddon/catalog` | Show the English web-filter feature catalog |
 | `GET` | `/api/v1/serveraddon/actions` | List the English action catalog and parameter meanings |
 | `GET` | `/api/v1/serveraddon/actions/recent?limit=20` | List recent queue rows |
 | `POST` | `/api/v1/serveraddon/actions` | Queue a gameserver action |
@@ -146,6 +149,7 @@ GM panels can expose a clear "Job Equipment" form without requiring operators to
 The referenced video is titled "Vsro V1.188 Web Filter | Job Equipment System | Multi Servers | For Rent".
 This bridge provides the English backend pieces for that style of panel:
 
+- `catalog` explains the video-style feature set in English for a web panel menu.
 - `actions` gives the panel an English action catalog.
 - `job-equipment` exposes a named GM operation for item/equipment grants.
 - `servers` exposes configured DuckSoup services for a multi-server selector.

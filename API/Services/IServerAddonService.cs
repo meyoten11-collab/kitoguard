@@ -15,6 +15,8 @@ public interface IServerAddonService
 
     List<ServerAddonServerSummary> GetConfiguredServers();
 
+    ServerAddonPanelCatalog GetEnglishPanelCatalog();
+
     ServerAddonHealth GetHealth();
 
     bool EnsureActionTable();
