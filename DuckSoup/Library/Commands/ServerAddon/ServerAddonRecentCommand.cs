@@ -20,8 +20,8 @@ public class ServerAddonRecentCommand : Command
     public override void Execute(string[]? args)
     {
         int limit = 20;
-        if (args is { Length: > 0 })
-            int.TryParse(args[0], out limit);
+        if (args is { Length: > 0 } && int.TryParse(args[0], out int parsedLimit))
+            limit = parsedLimit;
 
         IServerAddonService serverAddonService = ServiceFactory.Load<IServerAddonService>(typeof(IServerAddonService));
         List<ServerAddonGameServerAction> actions = serverAddonService.GetRecentActions(limit);

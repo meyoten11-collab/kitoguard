@@ -50,8 +50,8 @@ public class ServerAddonRoutes
 
         int limit = 20;
         string? limitQuery = ctx.Request.Query.Elements["limit"];
-        if (limitQuery != null)
-            int.TryParse(limitQuery, out limit);
+        if (limitQuery != null && int.TryParse(limitQuery, out int parsedLimit))
+            limit = parsedLimit;
 
         ctx.Response.StatusCode = 200;
         await ctx.Response.Send(JsonSerializer.Serialize(_serverAddonService.GetRecentActions(limit)));

@@ -35,24 +35,32 @@ public class ServerAddonQueueCommand : Command
             return;
         }
 
-        GameServerActionRequest request = new GameServerActionRequest
+        try
         {
-            ActionType = (GameServerActionType)actionId,
-            CharName16 = NormalizeTextParam(args[1]) ?? string.Empty,
-            Param01 = args.Length > 2 ? NormalizeTextParam(args[2]) : null,
-            Param02 = ParseOptionalLong(args, 3),
-            Param03 = ParseOptionalLong(args, 4),
-            Param04 = ParseOptionalLong(args, 5),
-            Param05 = ParseOptionalLong(args, 6),
-            Param06 = ParseOptionalLong(args, 7),
-            Param07 = ParseOptionalLong(args, 8),
-            Param08 = ParseOptionalLong(args, 9)
-        };
+            GameServerActionRequest request = new GameServerActionRequest
+            {
+                ActionType = (GameServerActionType)actionId,
+                CharName16 = NormalizeTextParam(args[1]) ?? string.Empty,
+                Param01 = args.Length > 2 ? NormalizeTextParam(args[2]) : null,
+                Param02 = ParseOptionalLong(args, 3),
+                Param03 = ParseOptionalLong(args, 4),
+                Param04 = ParseOptionalLong(args, 5),
+                Param05 = ParseOptionalLong(args, 6),
+                Param06 = ParseOptionalLong(args, 7),
+                Param07 = ParseOptionalLong(args, 8),
+                Param08 = ParseOptionalLong(args, 9)
+            };
 
-        IServerAddonService serverAddonService = ServiceFactory.Load<IServerAddonService>(typeof(IServerAddonService));
-        ServerAddonGameServerAction action = serverAddonService.QueueAction(request);
+            IServerAddonService serverAddonService =
+                ServiceFactory.Load<IServerAddonService>(typeof(IServerAddonService));
+            ServerAddonGameServerAction action = serverAddonService.QueueAction(request);
 
-        Log.Information("Queued ServerAddon action row {0}", action.ID);
+            Log.Information("Queued ServerAddon action row {0}", action.ID);
+        }
+        catch (ArgumentException exception)
+        {
+            Log.Warning("Could not queue ServerAddon action: {0}", exception.Message);
+        }
     }
 
     private static string? NormalizeTextParam(string value)

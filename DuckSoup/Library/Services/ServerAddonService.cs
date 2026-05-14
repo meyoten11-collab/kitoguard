@@ -205,7 +205,7 @@ public class ServerAddonService : Service<IServerAddonService>, IServerAddonServ
         if (requiresCharacter && string.IsNullOrWhiteSpace(request.CharName16))
             throw new ArgumentException("Character name is required.", nameof(request));
 
-        if (request.CharName16.Length > 64)
+        if (request.CharName16 is { Length: > 64 })
             throw new ArgumentException("Character name cannot exceed 64 characters.", nameof(request));
 
         if (request.Param01 is { Length: > 129 })
