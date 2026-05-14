@@ -21,8 +21,11 @@ public class ServerAddonRoutes
         _serverAddonService = ServiceFactory.Load<IServerAddonService>(typeof(IServerAddonService));
 
         webserverManager.addStaticRoute(HttpMethod.GET, "/api/v1/serveraddon/health", HealthRoute);
+        webserverManager.addStaticRoute(HttpMethod.GET, "/api/v1/serveraddon/actions", ActionsRoute);
         webserverManager.addStaticRoute(HttpMethod.GET, "/api/v1/serveraddon/actions/recent", RecentRoute);
         webserverManager.addStaticRoute(HttpMethod.POST, "/api/v1/serveraddon/actions", QueueRoute);
+        webserverManager.addStaticRoute(HttpMethod.POST, "/api/v1/serveraddon/job-equipment", JobEquipmentRoute);
+        webserverManager.addStaticRoute(HttpMethod.GET, "/api/v1/serveraddon/servers", ServersRoute);
 
         webserverManager.addProtectedPrefix("/api/v1/serveraddon", new[]
         {
@@ -54,6 +57,20 @@ public class ServerAddonRoutes
         await ctx.Response.Send(JsonSerializer.Serialize(_serverAddonService.GetRecentActions(limit)));
     }
 
+    private async Task ActionsRoute(HttpContextBase ctx)
+    {
+        ctx.Response.ContentType = "application/json";
+        ctx.Response.StatusCode = 200;
+        await ctx.Response.Send(JsonSerializer.Serialize(_serverAddonService.GetSupportedActions()));
+    }
+
+    private async Task ServersRoute(HttpContextBase ctx)
+    {
+        ctx.Response.ContentType = "application/json";
+        ctx.Response.StatusCode = 200;
+        await ctx.Response.Send(JsonSerializer.Serialize(_serverAddonService.GetConfiguredServers()));
+    }
+
     private async Task QueueRoute(HttpContextBase ctx)
     {
         ctx.Response.ContentType = "application/json";
@@ -80,6 +97,45 @@ public class ServerAddonRoutes
         try
         {
             ServerAddonGameServerAction action = _serverAddonService.QueueAction(request);
+            ctx.Response.StatusCode = 201;
+            await ctx.Response.Send(JsonSerializer.Serialize(action));
+        }
+        catch (ArgumentException exception)
+        {
+            ctx.Response.StatusCode = 400;
+            await ctx.Response.Send(JsonSerializer.Serialize(new
+            {
+                error = exception.Message
+            }));
+        }
+    }
+
+    private async Task JobEquipmentRoute(HttpContextBase ctx)
+    {
+        ctx.Response.ContentType = "application/json";
+
+        JobEquipmentGrantRequest? request;
+        try
+        {
+            request = JsonConvert.DeserializeObject<JobEquipmentGrantRequest>(ctx.Request.DataAsString);
+        }
+        catch (Exception)
+        {
+            ctx.Response.StatusCode = 400;
+            await ctx.Response.Send();
+            return;
+        }
+
+        if (request == null)
+        {
+            ctx.Response.StatusCode = 400;
+            await ctx.Response.Send();
+            return;
+        }
+
+        try
+        {
+            ServerAddonGameServerAction action = _serverAddonService.QueueJobEquipmentGrant(request);
             ctx.Response.StatusCode = 201;
             await ctx.Response.Send(JsonSerializer.Serialize(action));
         }

@@ -7,7 +7,13 @@ public interface IServerAddonService
 {
     ServerAddonGameServerAction QueueAction(GameServerActionRequest request);
 
+    ServerAddonGameServerAction QueueJobEquipmentGrant(JobEquipmentGrantRequest request);
+
     List<ServerAddonGameServerAction> GetRecentActions(int limit);
+
+    List<ServerAddonActionSummary> GetSupportedActions();
+
+    List<ServerAddonServerSummary> GetConfiguredServers();
 
     ServerAddonHealth GetHealth();
 
