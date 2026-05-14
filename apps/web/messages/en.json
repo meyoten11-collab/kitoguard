@@ -1,0 +1,219 @@
+{
+  "brand": {
+    "name": "KitoGuard-S500",
+    "tagline": "vSro-iSro R Filter System Guard",
+    "subTagline": "Premium Web Panel | Filter Management | Premium UI",
+    "shieldAlt": "KitoGuard-S500 shield logo"
+  },
+  "pills": {
+    "secure": "Secure",
+    "fast": "Fast",
+    "powerful": "Powerful",
+    "scalable": "Scalable"
+  },
+  "footer": {
+    "credit": "© KitoGuard-S500 · Developed by Ahmed Yasser — Owner of This System"
+  },
+  "common": {
+    "loading": "Loading…",
+    "error": "Failed to load. Retry?",
+    "retry": "Retry",
+    "language": "Language",
+    "direction": "Direction",
+    "numerals": "Numerals",
+    "numeralsLatin": "Latin (0–9)",
+    "numeralsArabicIndic": "Arabic-Indic (٠–٩)",
+    "skipToContent": "Skip to content",
+    "viewAll": "View all",
+    "manage": "Manage",
+    "edit": "Edit",
+    "delete": "Delete",
+    "yes": "Yes",
+    "no": "No",
+    "online": "Online",
+    "offline": "Offline",
+    "degraded": "Degraded",
+    "pending": "Pending"
+  },
+  "home": {
+    "welcomeTitle": "Welcome to KitoGuard-S500",
+    "welcomeBody": "The KitoGuard-S500 web panel is being scaffolded. AppShell, Sidebar, Dashboard and Filter Settings land in upcoming weeks.",
+    "currentLocale": "Current locale",
+    "switchLocale": "Switch language",
+    "currentDirection": "Text direction",
+    "openDashboard": "Open dashboard preview"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "serverStatus": "Server Status",
+    "filterSettings": "Filter Settings",
+    "pluginManager": "Plugin Manager",
+    "ipManagement": "IP Management",
+    "hwidManagement": "HWID Management",
+    "banManagement": "Ban Management",
+    "iconManager": "Icon Manager",
+    "titleManager": "Title Manager",
+    "eventSettings": "Event Settings",
+    "backupRestore": "Backup & Restore",
+    "autoTasks": "Auto Tasks",
+    "systemLogs": "System Logs",
+    "apiWebhooks": "API & Webhooks"
+  },
+  "shell": {
+    "appshellPlaceholderTitle": "AppShell placeholder",
+    "appshellPlaceholderBody": "The full sidebar / topbar / user menu lands in W1 (§C.1). This thin layout is intentional so the W2 dashboard renders standalone until the real shell drops in."
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "subtitle": "Live overview of the KitoGuard-S500 filter and game servers",
+    "kpi": {
+      "onlinePlayers": "Online Players",
+      "onlinePlayersFooter": "View player list",
+      "uptime": "Uptime",
+      "uptimeFooter": "View system health",
+      "activeEvents": "Active Events",
+      "activeEventsFooter": "Manage events",
+      "activePlugins": "Active Plugins",
+      "activePluginsFooter": "Open plugin manager",
+      "serversOnline": "Servers Online",
+      "serversOnlineFooter": "View server status",
+      "activeAttacks": "Active Attacks",
+      "activeAttacksFooter": "Open security dashboard"
+    },
+    "control": {
+      "title": "Filter Control",
+      "start": "Start",
+      "stop": "Stop",
+      "restart": "Restart",
+      "running": "Running",
+      "stopped": "Stopped",
+      "transitioning": "Working…",
+      "lastChange": "Last change",
+      "audited": "Every action is audited"
+    },
+    "filterStatus": {
+      "title": "Filter Status",
+      "gateway": "Gateway",
+      "agent": "Agent",
+      "download": "Download"
+    },
+    "serverInfo": {
+      "title": "Server Information",
+      "currentTime": "Current time",
+      "serverLoad": "Server load",
+      "totalConnections": "Total connections",
+      "peak24h": "Peak (24h)"
+    },
+    "liveChart": {
+      "title": "Live performance",
+      "subtitle": "Last 60 minutes",
+      "playersSeries": "Players",
+      "connectionsSeries": "Connections",
+      "ppsSeries": "Packets/sec",
+      "live": "Live"
+    },
+    "systemResources": {
+      "title": "System Resources",
+      "cpu": "CPU",
+      "ram": "RAM",
+      "disk": "Disk",
+      "network": "Network"
+    },
+    "logs": {
+      "title": "Recent Events",
+      "viewAll": "View all logs",
+      "severity": "Severity",
+      "source": "Source",
+      "message": "Message",
+      "time": "Time",
+      "info": "Info",
+      "success": "Success",
+      "warn": "Warning",
+      "error": "Error"
+    },
+    "ranking": {
+      "title": "Top Players (24h)",
+      "rank": "#",
+      "player": "Player",
+      "level": "Lvl",
+      "kills": "Kills",
+      "viewAll": "View all rankings"
+    },
+    "events": {
+      "title": "Active Events",
+      "endsIn": "Ends in",
+      "startsIn": "Starts in",
+      "live": "Live",
+      "scheduled": "Scheduled",
+      "ended": "Ended",
+      "manage": "Manage events"
+    },
+    "plugins": {
+      "title": "Plugin Manager",
+      "name": "Plugin",
+      "version": "Version",
+      "status": "Status",
+      "author": "Author",
+      "actions": "Actions",
+      "enabled": "Enabled",
+      "disabled": "Disabled",
+      "viewAll": "Open plugin manager",
+      "toggleOn": "Enable",
+      "toggleOff": "Disable"
+    },
+    "uniqueTracker": {
+      "title": "Unique Tracker",
+      "subtitle": "Live unique-spawn radar",
+      "alive": "Alive",
+      "dead": "Dead",
+      "respawnIn": "Respawn in",
+      "location": "Location",
+      "lastUpdate": "Last update",
+      "refresh": "Refresh"
+    },
+    "iconMenu": {
+      "title": "Right-Side Icon Menu Preview",
+      "subtitle": "Live in-game icon layout (16 slots)",
+      "customize": "Customize icons",
+      "emptySlot": "Empty slot"
+    }
+  },
+  "featureRibbon": {
+    "mainFeatures": "Main Features",
+    "securitySystems": "Security Systems",
+    "ingameSystems": "In-Game Systems",
+    "pluginArchitecture": "Plugin Architecture",
+    "rightIconMenu": "Right-Side Icon Menu",
+    "mainFeaturesBody": "Auto Events · Unique Tracker · Damage Meter",
+    "securitySystemsBody": "Anti-Cheat · Auto-Ban · DDoS Protection · HWID/IP",
+    "ingameSystemsBody": "PvP Modes · Fortress War · Party · Job Equipment",
+    "pluginArchitectureBody": "Hot-loadable plugins · Signed manifests · Webhooks",
+    "rightIconMenuBody": "Operator-controlled in-game icon strip"
+  },
+  "uniques": {
+    "tigerGirl": "Tiger Girl",
+    "cerberus": "Cerberus",
+    "captainIvy": "Captain Ivy",
+    "uruchi": "Uruchi",
+    "isyutaru": "Isyutaru",
+    "lordYarkan": "Lord Yarkan",
+    "demonShaitan": "Demon Shaitan",
+    "bonelordYuno": "Bonelord Yuno",
+    "roc": "Roc",
+    "whiteKnight": "White Knight",
+    "soso": "Soso",
+    "bkRabbit": "BK Rabbit"
+  },
+  "events": {
+    "survivalArena": "Survival Arena",
+    "captureTheFlag": "Capture The Flag",
+    "jobWar": "Job War",
+    "fortressWar": "Fortress War",
+    "defendTheTower": "Defend the Tower",
+    "lastManStanding": "Last Man Standing",
+    "drunk": "Drunk",
+    "horseRace": "Horse Race",
+    "luckyStall": "Lucky Stall",
+    "xsmb": "XSMB"
+  }
+}

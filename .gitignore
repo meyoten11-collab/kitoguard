@@ -15,3 +15,17 @@ Desktop.ini
 global.json
 DuckSoup.sln.DotSettings
 DuckSoup.sln.DotSettings.user
+
+# Node / Next.js (apps/web)
+node_modules/
+.pnpm-store/
+.next/
+out/
+*.tsbuildinfo
+.env*.local
+.env
+
+# Editor / OS noise
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
