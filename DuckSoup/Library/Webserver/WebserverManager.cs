@@ -42,6 +42,7 @@ public class WebserverManager : IWebserverManager
         _server?.Start();
         Log.Information("Webserver on http://{0}:{1} started", hostname, port);
         AuthRoutes authRoutes = new AuthRoutes(this);
+        ServerAddonRoutes serverAddonRoutes = new ServerAddonRoutes(this);
     }
 
     public void Stop()
