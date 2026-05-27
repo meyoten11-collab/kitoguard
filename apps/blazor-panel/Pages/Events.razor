@@ -1,0 +1,121 @@
+@page "/events"
+@inject EventService EventSvc
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title"><i class="fas fa-calendar-star"></i> Events</h1>
+        <p class="page-subtitle">Event management and scheduling</p>
+    </div>
+    <button class="btn btn-primary" @onclick="ShowAddEvent"><i class="fas fa-plus"></i> Add Event</button>
+</div>
+
+@if (msg != null) { <div class="alert alert-success">@msg</div> }
+
+<div class="card">
+    <div class="card-title"><i class="fas fa-list"></i> Registered Events</div>
+    <div class="table-container">
+        <table>
+            <thead><tr><th>ID</th><th>Name</th><th>Description</th><th>Actions</th></tr></thead>
+            <tbody>
+                @foreach (var e in events)
+                {
+                    <tr>
+                        <td>@e.ID</td>
+                        <td><strong>@e.Name</strong></td>
+                        <td>@e.Description</td>
+                        <td>
+                            <button class="btn btn-sm btn-primary" @onclick="() => EditEvent(e)"><i class="fas fa-edit"></i></button>
+                            <button class="btn btn-sm btn-danger" @onclick="() => DeleteEvent(e.ID)"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-title"><i class="fas fa-clock"></i> Event Schedules</div>
+    <div style="margin-bottom:10px;">
+        <button class="btn btn-primary" @onclick="ShowAddSchedule"><i class="fas fa-plus"></i> Add Schedule</button>
+    </div>
+    <div class="table-container">
+        <table>
+            <thead><tr><th>ID</th><th>Event</th><th>Day</th><th>Time</th><th>Actions</th></tr></thead>
+            <tbody>
+                @foreach (var s in schedules)
+                {
+                    <tr>
+                        <td>@s.ID</td>
+                        <td><strong>@s.EventName</strong></td>
+                        <td>@DayName(s.Day)</td>
+                        <td>@s.Time</td>
+                        <td><button class="btn btn-sm btn-danger" @onclick="() => DeleteSchedule(s.ID)"><i class="fas fa-trash"></i></button></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@if (showEventForm)
+{
+    <div class="card">
+        <div class="card-title">@(editingEvent != null ? "Edit" : "Add") Event</div>
+        <div class="form-grid">
+            <div class="form-group"><label class="form-label">Name</label><input class="form-control" @bind="eventForm.Name" /></div>
+            <div class="form-group"><label class="form-label">Description</label><input class="form-control" @bind="eventForm.Description" /></div>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:10px;">
+            <button class="btn btn-success" @onclick="SaveEvent"><i class="fas fa-save"></i> Save</button>
+            <button class="btn btn-danger" @onclick="() => showEventForm = false"><i class="fas fa-times"></i> Cancel</button>
+        </div>
+    </div>
+}
+
+@if (showSchedForm)
+{
+    <div class="card">
+        <div class="card-title">Add Schedule</div>
+        <div class="form-grid">
+            <div class="form-group"><label class="form-label">Event Name</label><input class="form-control" @bind="schedForm.EventName" /></div>
+            <div class="form-group"><label class="form-label">Day (0=Sun..6=Sat)</label><input class="form-control" type="number" @bind="schedForm.Day" /></div>
+            <div class="form-group"><label class="form-label">Time (HH:mm)</label><input class="form-control" @bind="schedForm.Time" /></div>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:10px;">
+            <button class="btn btn-success" @onclick="SaveSchedule"><i class="fas fa-save"></i> Save</button>
+            <button class="btn btn-danger" @onclick="() => showSchedForm = false"><i class="fas fa-times"></i> Cancel</button>
+        </div>
+    </div>
+}
+
+@code {
+    List<RefEventRegister> events = new();
+    List<RefEventSchedule> schedules = new();
+    RefEventRegister eventForm = new();
+    RefEventSchedule schedForm = new();
+    RefEventRegister? editingEvent;
+    bool showEventForm = false, showSchedForm = false;
+    string? msg;
+
+    protected override async Task OnInitializedAsync() { events = await EventSvc.GetAllEvents(); schedules = await EventSvc.GetAllSchedules(); }
+
+    void ShowAddEvent() { eventForm = new(); editingEvent = null; showEventForm = true; }
+    void ShowAddSchedule() { schedForm = new(); showSchedForm = true; }
+    void EditEvent(RefEventRegister e) { eventForm = new() { ID = e.ID, Name = e.Name, Description = e.Description }; editingEvent = e; showEventForm = true; }
+
+    async Task SaveEvent()
+    {
+        if (editingEvent != null) await EventSvc.UpdateEvent(eventForm);
+        else await EventSvc.CreateEvent(eventForm);
+        events = await EventSvc.GetAllEvents();
+        showEventForm = false;
+        msg = editingEvent != null ? "Updated!" : "Created!";
+    }
+
+    async Task DeleteEvent(int id) { await EventSvc.DeleteEvent(id); events = await EventSvc.GetAllEvents(); schedules = await EventSvc.GetAllSchedules(); msg = "Deleted!"; }
+    async Task SaveSchedule() { await EventSvc.CreateSchedule(schedForm); schedules = await EventSvc.GetAllSchedules(); showSchedForm = false; msg = "Schedule added!"; }
+    async Task DeleteSchedule(int id) { await EventSvc.DeleteSchedule(id); schedules = await EventSvc.GetAllSchedules(); msg = "Deleted!"; }
+
+    string DayName(byte day) => day switch { 0 => "Sunday", 1 => "Monday", 2 => "Tuesday", 3 => "Wednesday", 4 => "Thursday", 5 => "Friday", 6 => "Saturday", _ => $"Day {day}" };
+}

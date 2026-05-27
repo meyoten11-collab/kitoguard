@@ -1,0 +1,113 @@
+@page "/settings"
+@inject SettingsService SettingsSvc
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title"><i class="fas fa-cog"></i> Server Settings</h1>
+        <p class="page-subtitle">Configure all @settings.Count server features — no SQL needed</p>
+    </div>
+    <button class="btn btn-primary" @onclick="SaveAll" disabled="@(!changes.Any())">
+        <i class="fas fa-save"></i> Save @changes.Count Changes
+    </button>
+</div>
+
+@if (saved)
+{
+    <div class="alert alert-success"><i class="fas fa-check-circle"></i> @changes.Count settings saved successfully!</div>
+}
+
+<div class="search-box">
+    <input class="form-control" placeholder="Search settings..." @bind="searchTerm" @bind:event="oninput" />
+</div>
+
+@foreach (var category in GetCategories())
+{
+    var catSettings = GetSettingsByCategory(category);
+    if (!catSettings.Any()) continue;
+
+    <div class="card">
+        <div class="card-title">
+            <i class="@GetCategoryIcon(category)"></i> @category
+            <span class="badge">@catSettings.Count</span>
+        </div>
+        <div class="form-grid">
+            @foreach (var setting in catSettings)
+            {
+                <div class="form-group">
+                    <label class="form-label" title="@setting.SettingName">@FormatName(setting.SettingName)</label>
+                    @if (setting.DataType == "bool")
+                    {
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked="@(setting.Value.Equals("true", StringComparison.OrdinalIgnoreCase))"
+                                   @onchange="(e) => OnToggle(setting, e)" />
+                            <span class="toggle-slider"></span>
+                        </label>
+                    }
+                    else if (setting.DataType == "int")
+                    {
+                        <input class="form-control" type="number" value="@setting.Value"
+                               @onchange="(e) => OnValueChange(setting, e)" />
+                    }
+                    else
+                    {
+                        <input class="form-control" type="text" value="@setting.Value"
+                               @onchange="(e) => OnValueChange(setting, e)" />
+                    }
+                </div>
+            }
+        </div>
+    </div>
+}
+
+@code {
+    List<ServerSetting> settings = new();
+    Dictionary<string, string> changes = new();
+    string searchTerm = "";
+    bool saved = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        settings = await SettingsSvc.GetAllSettings();
+    }
+
+    List<string> GetCategories() => settings.Select(s => s.Category).Distinct().OrderBy(c => c).ToList();
+
+    List<ServerSetting> GetSettingsByCategory(string cat) =>
+        settings.Where(s => s.Category == cat &&
+            (string.IsNullOrEmpty(searchTerm) || s.SettingName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)))
+        .OrderBy(s => s.SettingName).ToList();
+
+    string FormatName(string name) => System.Text.RegularExpressions.Regex.Replace(name, "([a-z])([A-Z])", "$1 $2");
+
+    void OnToggle(ServerSetting s, ChangeEventArgs e) { s.Value = e.Value?.ToString() ?? "false"; changes[s.SettingName] = s.Value; }
+    void OnValueChange(ServerSetting s, ChangeEventArgs e) { s.Value = e.Value?.ToString() ?? ""; changes[s.SettingName] = s.Value; }
+
+    async Task SaveAll()
+    {
+        if (!changes.Any()) return;
+        await SettingsSvc.BulkUpdateSettings(changes);
+        saved = true;
+        changes.Clear();
+        StateHasChanged();
+        await Task.Delay(3000);
+        saved = false;
+        StateHasChanged();
+    }
+
+    string GetCategoryIcon(string cat) => cat switch
+    {
+        "Security" => "fas fa-shield-alt",
+        "Alchemy" => "fas fa-flask",
+        "Job & Trade" => "fas fa-briefcase",
+        "Social" => "fas fa-share-alt",
+        "Economy" => "fas fa-coins",
+        "UI & Display" => "fas fa-desktop",
+        "Timers & Delays" => "fas fa-stopwatch",
+        "Database" => "fas fa-database",
+        "Combat & PvP" => "fas fa-swords",
+        "Character" => "fas fa-user-ninja",
+        "Events & Rewards" => "fas fa-gift",
+        "Automation" => "fas fa-robot",
+        _ => "fas fa-cog"
+    };
+}

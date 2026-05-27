@@ -1,0 +1,74 @@
+@page "/itemchest"
+@inject ItemChestService ChestSvc
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title"><i class="fas fa-box-open"></i> Item Chest</h1>
+        <p class="page-subtitle">Treasure chest items and reward storage</p>
+    </div>
+    <button class="btn btn-primary" @onclick="ShowAdd"><i class="fas fa-plus"></i> Add Chest Item</button>
+</div>
+
+@if (msg != null) { <div class="alert alert-success">@msg</div> }
+
+<div class="card">
+    <div class="table-container">
+        <table>
+            <thead><tr><th>ID</th><th>CharID</th><th>Item</th><th>ItemID</th><th>Qty</th><th>+</th><th>Type</th><th>Date</th><th>Actions</th></tr></thead>
+            <tbody>
+                @foreach (var c in items)
+                {
+                    <tr>
+                        <td>@c.ID</td>
+                        <td>@c.CharID</td>
+                        <td>@c.ItemCodeName</td>
+                        <td>@c.ItemID</td>
+                        <td>@c.Quantity</td>
+                        <td>@c.Plus</td>
+                        <td><span class="badge">@c.Type</span></td>
+                        <td>@c.Date</td>
+                        <td><button class="btn btn-sm btn-danger" @onclick="() => Delete(c.ID)"><i class="fas fa-trash"></i></button></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@if (showForm)
+{
+    <div class="card">
+        <div class="card-title">Add Chest Item</div>
+        <div class="form-grid">
+            <div class="form-group"><label class="form-label">CharID</label><input class="form-control" type="number" @bind="form.CharID" /></div>
+            <div class="form-group"><label class="form-label">Item CodeName</label><input class="form-control" @bind="form.ItemCodeName" /></div>
+            <div class="form-group"><label class="form-label">Item ID</label><input class="form-control" type="number" @bind="form.ItemID" /></div>
+            <div class="form-group"><label class="form-label">Quantity</label><input class="form-control" type="number" @bind="form.Quantity" /></div>
+            <div class="form-group"><label class="form-label">Plus</label><input class="form-control" type="number" @bind="form.Plus" /></div>
+            <div class="form-group"><label class="form-label">Type</label><input class="form-control" @bind="form.Type" /></div>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:10px;">
+            <button class="btn btn-success" @onclick="Save"><i class="fas fa-save"></i> Save</button>
+            <button class="btn btn-danger" @onclick="() => showForm = false"><i class="fas fa-times"></i> Cancel</button>
+        </div>
+    </div>
+}
+
+@code {
+    List<ItemChestEntry> items = new();
+    ItemChestEntry form = new();
+    bool showForm;
+    string? msg;
+
+    protected override async Task OnInitializedAsync() { items = await ChestSvc.GetAll(); }
+    void ShowAdd() { form = new() { Date = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") }; showForm = true; }
+
+    async Task Save()
+    {
+        await ChestSvc.Create(form);
+        items = await ChestSvc.GetAll();
+        showForm = false;
+        msg = "Created!";
+    }
+    async Task Delete(int id) { await ChestSvc.Delete(id); items = await ChestSvc.GetAll(); msg = "Deleted!"; }
+}

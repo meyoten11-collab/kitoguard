@@ -1,0 +1,80 @@
+@page "/players"
+@inject PlayerService PlayerSvc
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title"><i class="fas fa-users"></i> Players</h1>
+        <p class="page-subtitle">Online players and character management</p>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-title"><i class="fas fa-circle" style="color:var(--kg-success);font-size:0.6rem"></i> Online Players</div>
+    <div class="table-container">
+        <table>
+            <thead><tr><th>CharID</th><th>Name</th><th>Level</th><th>Status</th></tr></thead>
+            <tbody>
+                @foreach (var p in onlinePlayers)
+                {
+                    <tr><td>@p.CharID</td><td>@p.CharName</td><td>@p.Level</td><td><span class="badge badge-success">Online</span></td></tr>
+                }
+                @if (!onlinePlayers.Any())
+                {
+                    <tr><td colspan="4" style="text-align:center;color:var(--kg-text-muted)">No players online</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-title"><i class="fas fa-search"></i> Search Characters</div>
+    <div style="display:flex;gap:10px;margin-bottom:15px;">
+        <input class="form-control" placeholder="Character name..." @bind="searchName" @bind:event="oninput" @onkeydown="HandleSearchKey" />
+        <button class="btn btn-primary" @onclick="Search"><i class="fas fa-search"></i> Search</button>
+    </div>
+    @if (characters.Any())
+    {
+        <div class="table-container">
+            <table>
+                <thead><tr><th>ID</th><th>Name</th><th>Level</th><th>Gold</th><th>SP</th><th>Guild</th><th>Account</th></tr></thead>
+                <tbody>
+                    @foreach (var c in characters)
+                    {
+                        <tr>
+                            <td>@c.CharID</td>
+                            <td><strong>@c.CharName16</strong></td>
+                            <td>@c.CurLevel / @c.MaxLevel</td>
+                            <td>@c.RemainGold.ToString("N0")</td>
+                            <td>@c.RemainSkillPoint.ToString("N0")</td>
+                            <td>@(string.IsNullOrEmpty(c.GuildName) ? "—" : c.GuildName)</td>
+                            <td>@c.StrUserID</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+@code {
+    List<OnlinePlayer> onlinePlayers = new();
+    List<CharacterInfo> characters = new();
+    string searchName = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        onlinePlayers = await PlayerSvc.GetOnlinePlayers();
+    }
+
+    async Task Search()
+    {
+        if (!string.IsNullOrWhiteSpace(searchName))
+            characters = await PlayerSvc.SearchCharacters(searchName);
+    }
+
+    async Task HandleSearchKey(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter") await Search();
+    }
+}

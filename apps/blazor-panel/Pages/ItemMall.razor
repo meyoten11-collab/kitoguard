@@ -1,0 +1,98 @@
+@page "/itemmall"
+@inject ItemMallService MallSvc
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title"><i class="fas fa-store"></i> Item Mall</h1>
+        <p class="page-subtitle">Manage in-game shop items and avatars</p>
+    </div>
+    <button class="btn btn-primary" @onclick="ShowAdd"><i class="fas fa-plus"></i> Add Item</button>
+</div>
+
+@if (msg != null) { <div class="alert alert-success">@msg</div> }
+
+<div class="search-box">
+    <input class="form-control" placeholder="Filter by category or codename..." @bind="filter" @bind:event="oninput" />
+</div>
+
+<div class="card">
+    <div class="card-title"><i class="fas fa-shopping-cart"></i> Item Mall (@Filtered.Count items)</div>
+    <div class="table-container">
+        <table>
+            <thead><tr><th>ID</th><th>Category</th><th>CodeName</th><th>ItemID</th><th>Count</th><th>Silk</th><th>Active</th><th>Actions</th></tr></thead>
+            <tbody>
+                @foreach (var i in Filtered)
+                {
+                    <tr>
+                        <td>@i.ID</td>
+                        <td><span class="badge">@i.CategoryName</span></td>
+                        <td>@i.CodeName128</td>
+                        <td>@i.ItemID</td>
+                        <td>@i.ItemCount</td>
+                        <td><strong>@i.Silk</strong></td>
+                        <td>
+                            <label class="toggle-switch"><input type="checkbox" checked="@i.Service" disabled /><span class="toggle-slider"></span></label>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-primary" @onclick="() => Edit(i)"><i class="fas fa-edit"></i></button>
+                            <button class="btn btn-sm btn-danger" @onclick="() => Delete(i.ID)"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@if (showForm)
+{
+    <div class="card">
+        <div class="card-title">@(editing != null ? "Edit" : "Add") Mall Item</div>
+        <div class="form-grid">
+            <div class="form-group"><label class="form-label">Category</label><input class="form-control" @bind="form.CategoryName" /></div>
+            <div class="form-group"><label class="form-label">CodeName128</label><input class="form-control" @bind="form.CodeName128" /></div>
+            <div class="form-group"><label class="form-label">Item ID</label><input class="form-control" type="number" @bind="form.ItemID" /></div>
+            <div class="form-group"><label class="form-label">Count</label><input class="form-control" type="number" @bind="form.ItemCount" /></div>
+            <div class="form-group"><label class="form-label">Silk Price</label><input class="form-control" type="number" @bind="form.Silk" /></div>
+            <div class="form-group"><label class="form-label">Type</label><input class="form-control" type="number" @bind="form.Type" /></div>
+            <div class="form-group"><label class="form-label">Index</label><input class="form-control" type="number" @bind="form.ItemIndex" /></div>
+            <div class="form-group">
+                <label class="form-label">Active</label>
+                <label class="toggle-switch"><input type="checkbox" @bind="form.Service" /><span class="toggle-slider"></span></label>
+            </div>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:10px;">
+            <button class="btn btn-success" @onclick="Save"><i class="fas fa-save"></i> Save</button>
+            <button class="btn btn-danger" @onclick="() => showForm = false"><i class="fas fa-times"></i> Cancel</button>
+        </div>
+    </div>
+}
+
+@code {
+    List<RefNewItemMall> items = new();
+    RefNewItemMall form = new();
+    RefNewItemMall? editing;
+    bool showForm;
+    string? msg;
+    string filter = "";
+
+    List<RefNewItemMall> Filtered => items.Where(i =>
+        string.IsNullOrEmpty(filter) ||
+        i.CategoryName.Contains(filter, StringComparison.OrdinalIgnoreCase) ||
+        i.CodeName128.Contains(filter, StringComparison.OrdinalIgnoreCase)).ToList();
+
+    protected override async Task OnInitializedAsync() { items = await MallSvc.GetAll(); }
+    void ShowAdd() { form = new(); editing = null; showForm = true; }
+    void Edit(RefNewItemMall i) { form = new() { ID = i.ID, Service = i.Service, CategoryName = i.CategoryName, Type = i.Type, CodeName128 = i.CodeName128, ItemID = i.ItemID, ItemCount = i.ItemCount, Silk = i.Silk, ItemIndex = i.ItemIndex }; editing = i; showForm = true; }
+
+    async Task Save()
+    {
+        if (editing != null) await MallSvc.Update(form);
+        else await MallSvc.Create(form);
+        items = await MallSvc.GetAll();
+        showForm = false;
+        msg = editing != null ? "Updated!" : "Created!";
+    }
+
+    async Task Delete(int id) { await MallSvc.Delete(id); items = await MallSvc.GetAll(); msg = "Deleted!"; }
+}

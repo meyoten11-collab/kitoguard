@@ -1,0 +1,106 @@
+@page "/rankings"
+@inject RankService RankSvc
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title"><i class="fas fa-ranking-star"></i> Rankings</h1>
+        <p class="page-subtitle">Dynamic ranking categories and leaderboards</p>
+    </div>
+    <button class="btn btn-primary" @onclick="ShowAdd"><i class="fas fa-plus"></i> Add Category</button>
+</div>
+
+@if (msg != null) { <div class="alert alert-success">@msg</div> }
+
+<div class="card">
+    <div class="card-title"><i class="fas fa-tags"></i> Rank Categories</div>
+    <div class="table-container">
+        <table>
+            <thead><tr><th>ID</th><th>Category</th><th>Enabled</th><th>Actions</th></tr></thead>
+            <tbody>
+                @foreach (var c in categories)
+                {
+                    <tr>
+                        <td>@c.ID</td>
+                        <td><strong>@c.CategoryName</strong></td>
+                        <td>
+                            <label class="toggle-switch"><input type="checkbox" checked="@c.IsEnabled" disabled /><span class="toggle-slider"></span></label>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-primary" @onclick="() => ViewRank(c.ID)"><i class="fas fa-eye"></i></button>
+                            <button class="btn btn-sm btn-primary" @onclick="() => Edit(c)"><i class="fas fa-edit"></i></button>
+                            <button class="btn btn-sm btn-danger" @onclick="() => Delete(c.ID)"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@if (rankData.Any())
+{
+    <div class="card">
+        <div class="card-title"><i class="fas fa-chart-bar"></i> Leaderboard</div>
+        <div class="table-container">
+            <table>
+                <thead><tr><th>#</th><th>Character</th><th>Value</th></tr></thead>
+                <tbody>
+                    @foreach (var r in rankData)
+                    {
+                        <tr>
+                            <td><span class="badge">@r.Rank</span></td>
+                            <td><strong>@r.CharName</strong></td>
+                            <td>@r.Value</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+
+@if (showForm)
+{
+    <div class="card">
+        <div class="card-title">@(editing != null ? "Edit" : "Add") Rank Category</div>
+        <div class="form-grid">
+            <div class="form-group"><label class="form-label">Category Name</label><input class="form-control" @bind="form.CategoryName" /></div>
+            <div class="form-group">
+                <label class="form-label">Enabled</label>
+                <label class="toggle-switch"><input type="checkbox" @bind="form.IsEnabled" /><span class="toggle-slider"></span></label>
+            </div>
+        </div>
+        <div class="form-group" style="margin-top:10px;">
+            <label class="form-label">SQL Query (returns Rank, CharName, Value columns)</label>
+            <textarea class="form-control" rows="4" @bind="form.Query"></textarea>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:10px;">
+            <button class="btn btn-success" @onclick="Save"><i class="fas fa-save"></i> Save</button>
+            <button class="btn btn-danger" @onclick="() => showForm = false"><i class="fas fa-times"></i> Cancel</button>
+        </div>
+    </div>
+}
+
+@code {
+    List<RefRankCategory> categories = new();
+    List<RankEntry> rankData = new();
+    RefRankCategory form = new();
+    RefRankCategory? editing;
+    bool showForm;
+    string? msg;
+
+    protected override async Task OnInitializedAsync() { categories = await RankSvc.GetCategories(); }
+    void ShowAdd() { form = new() { IsEnabled = true }; editing = null; showForm = true; }
+    void Edit(RefRankCategory c) { form = new() { ID = c.ID, CategoryName = c.CategoryName, Query = c.Query, IsEnabled = c.IsEnabled }; editing = c; showForm = true; }
+    async Task ViewRank(int id) { rankData = await RankSvc.GetRankData(id); }
+
+    async Task Save()
+    {
+        if (editing != null) await RankSvc.UpdateCategory(form);
+        else await RankSvc.CreateCategory(form);
+        categories = await RankSvc.GetCategories();
+        showForm = false;
+        msg = editing != null ? "Updated!" : "Created!";
+    }
+    async Task Delete(int id) { await RankSvc.DeleteCategory(id); categories = await RankSvc.GetCategories(); msg = "Deleted!"; }
+}

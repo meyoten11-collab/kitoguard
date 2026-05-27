@@ -1,0 +1,76 @@
+@page "/luckyspin"
+@inject LuckySpinService SpinSvc
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title"><i class="fas fa-dice"></i> Lucky Spin</h1>
+        <p class="page-subtitle">Configure spin wheel rewards and probabilities</p>
+    </div>
+    <button class="btn btn-primary" @onclick="ShowAdd"><i class="fas fa-plus"></i> Add Reward</button>
+</div>
+
+@if (msg != null) { <div class="alert alert-success">@msg</div> }
+
+<div class="card">
+    <div class="table-container">
+        <table>
+            <thead><tr><th>ID</th><th>Item ID</th><th>Amount</th><th>Rate</th><th>Probability</th><th>Actions</th></tr></thead>
+            <tbody>
+                @foreach (var r in items)
+                {
+                    var totalRate = items.Sum(x => x.Rate);
+                    var pct = totalRate > 0 ? (r.Rate * 100.0 / totalRate).ToString("F2") : "0";
+                    <tr>
+                        <td>@r.ID</td>
+                        <td>@r.ItemID</td>
+                        <td>@r.Amount</td>
+                        <td>@r.Rate</td>
+                        <td><span class="badge">@pct%</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-primary" @onclick="() => Edit(r)"><i class="fas fa-edit"></i></button>
+                            <button class="btn btn-sm btn-danger" @onclick="() => Delete(r.ID)"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@if (showForm)
+{
+    <div class="card">
+        <div class="card-title">@(editing != null ? "Edit" : "Add") Spin Reward</div>
+        <div class="form-grid">
+            <div class="form-group"><label class="form-label">Item ID</label><input class="form-control" type="number" @bind="form.ItemID" /></div>
+            <div class="form-group"><label class="form-label">Amount</label><input class="form-control" type="number" @bind="form.Amount" /></div>
+            <div class="form-group"><label class="form-label">Rate (weight)</label><input class="form-control" type="number" @bind="form.Rate" /></div>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:10px;">
+            <button class="btn btn-success" @onclick="Save"><i class="fas fa-save"></i> Save</button>
+            <button class="btn btn-danger" @onclick="() => showForm = false"><i class="fas fa-times"></i> Cancel</button>
+        </div>
+    </div>
+}
+
+@code {
+    List<LuckySpinReward> items = new();
+    LuckySpinReward form = new();
+    LuckySpinReward? editing;
+    bool showForm;
+    string? msg;
+
+    protected override async Task OnInitializedAsync() { items = await SpinSvc.GetAll(); }
+    void ShowAdd() { form = new(); editing = null; showForm = true; }
+    void Edit(LuckySpinReward r) { form = new() { ID = r.ID, ItemID = r.ItemID, Amount = r.Amount, Rate = r.Rate }; editing = r; showForm = true; }
+
+    async Task Save()
+    {
+        if (editing != null) await SpinSvc.Update(form);
+        else await SpinSvc.Create(form);
+        items = await SpinSvc.GetAll();
+        showForm = false;
+        msg = editing != null ? "Updated!" : "Created!";
+    }
+    async Task Delete(int id) { await SpinSvc.Delete(id); items = await SpinSvc.GetAll(); msg = "Deleted!"; }
+}

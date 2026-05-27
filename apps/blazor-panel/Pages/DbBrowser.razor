@@ -1,0 +1,225 @@
+@page "/dbbrowser"
+@inject DbBrowserService DbSvc
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title"><i class="fas fa-database"></i> DB Browser</h1>
+        <p class="page-subtitle">Database explorer with editable tree view</p>
+    </div>
+</div>
+
+<div style="display:grid;grid-template-columns:280px 1fr;gap:20px;">
+
+<div class="card" style="height:fit-content;max-height:80vh;overflow-y:auto;">
+    <div class="card-title"><i class="fas fa-sitemap"></i> Tables</div>
+    @foreach (var db in databases)
+    {
+        <div class="db-tree-group">
+            <div class="db-tree-db" @onclick="() => ToggleDb(db)">
+                <i class="fas @(expandedDbs.Contains(db) ? "fa-folder-open" : "fa-folder")" style="color:var(--kg-warning)"></i>
+                <strong>@db</strong>
+            </div>
+            @if (expandedDbs.Contains(db) && tableMap.ContainsKey(db))
+            {
+                @foreach (var tbl in tableMap[db])
+                {
+                    <div class="db-tree-table @(selectedTable == tbl && selectedDb == db ? "active" : "")"
+                         @onclick="() => SelectTable(db, tbl)">
+                        <i class="fas fa-table" style="color:var(--kg-text-muted);font-size:0.75rem"></i>
+                        @tbl
+                    </div>
+                }
+            }
+        </div>
+    }
+</div>
+
+<div>
+    @if (!string.IsNullOrEmpty(selectedTable))
+    {
+        <div class="card">
+            <div class="card-title">
+                <i class="fas fa-table"></i> @selectedDb → @selectedTable
+                <span class="badge" style="margin-left:10px">@rowCount rows</span>
+            </div>
+            @if (editMsg != null) { <div class="alert alert-success" style="margin-bottom:10px">@editMsg</div> }
+            <div class="table-container" style="max-height:500px;overflow:auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            @foreach (var col in columns)
+                            {
+                                <th style="white-space:nowrap">@col</th>
+                            }
+                            <th>Edit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var row in tableData)
+                        {
+                            <tr>
+                                @foreach (var col in columns)
+                                {
+                                    var val = row.ContainsKey(col) ? row[col]?.ToString() ?? "" : "";
+                                    <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="@val">@val</td>
+                                }
+                                <td>
+                                    @if (columns.Any())
+                                    {
+                                        <button class="btn btn-sm btn-primary" @onclick="() => StartEditRow(row)"><i class="fas fa-edit"></i></button>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        @if (editingRow != null)
+        {
+            <div class="card">
+                <div class="card-title"><i class="fas fa-edit"></i> Edit Row — @columns.First() = @editPkValue</div>
+                <div class="form-grid">
+                    @foreach (var col in columns)
+                    {
+                        <div class="form-group">
+                            <label class="form-label">@col</label>
+                            <input class="form-control" value="@GetEditValue(col)" @onchange="(e) => SetEditValue(col, e.Value?.ToString() ?? string.Empty)" />
+                        </div>
+                    }
+                </div>
+                <div style="display:flex;gap:10px;margin-top:10px;">
+                    <button class="btn btn-success" @onclick="SaveEdit"><i class="fas fa-save"></i> Save</button>
+                    <button class="btn btn-danger" @onclick="() => editingRow = null"><i class="fas fa-times"></i> Cancel</button>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="card" style="text-align:center;padding:60px 20px;">
+            <i class="fas fa-hand-pointer" style="font-size:3rem;color:var(--kg-text-muted)"></i>
+            <p style="color:var(--kg-text-muted);margin-top:15px;">Select a table from the tree to browse data</p>
+        </div>
+    }
+
+    <div class="card" style="margin-top:20px;">
+        <div class="card-title"><i class="fas fa-code"></i> Custom Query</div>
+        <div class="form-group">
+            <label class="form-label">Database</label>
+            <select class="form-control" @bind="queryDb">
+                @foreach (var db in databases) { <option value="@db">@db</option> }
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="form-label">SQL Query</label>
+            <textarea class="form-control" rows="3" @bind="customQuery" placeholder="SELECT TOP 100 * FROM _Char"></textarea>
+        </div>
+        <div style="display:flex;gap:10px;">
+            <button class="btn btn-primary" @onclick="RunSelect"><i class="fas fa-play"></i> Run SELECT</button>
+            <button class="btn btn-danger" @onclick="RunExecute"><i class="fas fa-bolt"></i> Execute</button>
+        </div>
+        @if (queryError != null) { <div class="alert alert-danger" style="margin-top:10px;">@queryError</div> }
+        @if (queryMsg != null) { <div class="alert alert-success" style="margin-top:10px;">@queryMsg</div> }
+
+        @if (queryResult.Any())
+        {
+            <div class="table-container" style="margin-top:15px;max-height:400px;overflow:auto;">
+                <table>
+                    <thead><tr>@foreach (var col in queryResult[0].Keys) { <th>@col</th> }</tr></thead>
+                    <tbody>
+                        @foreach (var row in queryResult)
+                        {
+                            <tr>@foreach (var val in row.Values) { <td>@val</td> }</tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>
+</div>
+
+@code {
+    string[] databases = { "KitoGuard", "Shard", "Account", "Log" };
+    Dictionary<string, List<string>> tableMap = new();
+    HashSet<string> expandedDbs = new();
+    List<string> columns = new();
+    List<Dictionary<string, object>> tableData = new();
+    string selectedDb = "", selectedTable = "";
+    int rowCount;
+    string queryDb = "Shard", customQuery = "";
+    List<Dictionary<string, object>> queryResult = new();
+    string? queryError, queryMsg, editMsg;
+    Dictionary<string, object>? editingRow;
+    Dictionary<string, string> editValues = new();
+    string editPkValue = "";
+
+    async Task ToggleDb(string db)
+    {
+        if (expandedDbs.Contains(db)) { expandedDbs.Remove(db); return; }
+        if (!tableMap.ContainsKey(db))
+        {
+            try { tableMap[db] = await DbSvc.GetTables(db); }
+            catch { tableMap[db] = new List<string>(); }
+        }
+        expandedDbs.Add(db);
+    }
+
+    async Task SelectTable(string db, string table)
+    {
+        selectedDb = db; selectedTable = table;
+        editingRow = null;
+        try
+        {
+            columns = await DbSvc.GetTableColumns(db, table);
+            tableData = await DbSvc.GetTableData(db, table);
+            rowCount = await DbSvc.GetTableRowCount(db, table);
+        }
+        catch { columns = new(); tableData = new(); rowCount = 0; }
+    }
+
+    void StartEditRow(Dictionary<string, object> row)
+    {
+        editingRow = row;
+        editValues = row.ToDictionary(kv => kv.Key, kv => kv.Value?.ToString() ?? "");
+        editPkValue = columns.Any() ? (row.ContainsKey(columns[0]) ? row[columns[0]]?.ToString() ?? "" : "") : "";
+        editMsg = null;
+    }
+
+    string GetEditValue(string col) => editValues.ContainsKey(col) ? editValues[col] : "";
+    void SetEditValue(string col, string val) { editValues[col] = val; }
+
+    async Task SaveEdit()
+    {
+        if (editingRow == null || !columns.Any()) return;
+        var pkCol = columns[0];
+        var pkVal = editPkValue;
+        foreach (var kv in editValues.Where(kv => kv.Key != pkCol))
+        {
+            var orig = editingRow.ContainsKey(kv.Key) ? editingRow[kv.Key]?.ToString() ?? "" : "";
+            if (kv.Value != orig)
+            {
+                await DbSvc.UpdateCell(selectedDb, selectedTable, pkCol, pkVal, kv.Key, kv.Value);
+            }
+        }
+        tableData = await DbSvc.GetTableData(selectedDb, selectedTable);
+        editingRow = null;
+        editMsg = "Row updated!";
+    }
+
+    async Task RunSelect()
+    {
+        queryError = queryMsg = null; queryResult = new();
+        try { queryResult = await DbSvc.ExecuteSelectQuery(queryDb, customQuery); queryMsg = $"{queryResult.Count} rows returned"; }
+        catch (Exception ex) { queryError = ex.Message; }
+    }
+
+    async Task RunExecute()
+    {
+        queryError = queryMsg = null; queryResult = new();
+        try { var rows = await DbSvc.ExecuteNonQuery(queryDb, customQuery); queryMsg = $"{rows} rows affected"; }
+        catch (Exception ex) { queryError = ex.Message; }
+    }
+}

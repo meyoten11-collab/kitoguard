@@ -1,0 +1,91 @@
+@page "/scheduler"
+@inject SchedulerService SchedSvc
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title"><i class="fas fa-clock"></i> Scheduler</h1>
+        <p class="page-subtitle">Automated task scheduling</p>
+    </div>
+    <button class="btn btn-primary" @onclick="ShowAdd"><i class="fas fa-plus"></i> Add Task</button>
+</div>
+
+@if (msg != null) { <div class="alert alert-success">@msg</div> }
+
+<div class="card">
+    <div class="table-container">
+        <table>
+            <thead><tr><th>Idx</th><th>Name</th><th>Day</th><th>Time</th><th>Enabled</th><th>Comment</th><th>Actions</th></tr></thead>
+            <tbody>
+                @foreach (var t in tasks)
+                {
+                    <tr>
+                        <td>@t.Idx</td>
+                        <td><strong>@t.Name</strong></td>
+                        <td>@DayName(t.Day)</td>
+                        <td>@t.Time</td>
+                        <td>
+                            <label class="toggle-switch">
+                                <input type="checkbox" checked="@t.IsEnabled" @onchange="(e) => ToggleTask(t.Idx, (bool)(e.Value ?? false))" />
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </td>
+                        <td>@t.Comment</td>
+                        <td>
+                            <button class="btn btn-sm btn-primary" @onclick="() => Edit(t)"><i class="fas fa-edit"></i></button>
+                            <button class="btn btn-sm btn-danger" @onclick="() => Delete(t.Idx)"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@if (showForm)
+{
+    <div class="card">
+        <div class="card-title">@(editing != null ? "Edit" : "Add") Scheduled Task</div>
+        <div class="form-grid">
+            <div class="form-group"><label class="form-label">Name</label><input class="form-control" @bind="form.Name" /></div>
+            <div class="form-group"><label class="form-label">Day (0-7, 7=daily)</label><input class="form-control" type="number" @bind="form.Day" /></div>
+            <div class="form-group"><label class="form-label">Time (HH:mm)</label><input class="form-control" @bind="form.Time" /></div>
+            <div class="form-group">
+                <label class="form-label">Enabled</label>
+                <label class="toggle-switch"><input type="checkbox" @bind="form.IsEnabled" /><span class="toggle-slider"></span></label>
+            </div>
+            <div class="form-group"><label class="form-label">Comment</label><input class="form-control" @bind="form.Comment" /></div>
+        </div>
+        <div class="form-group" style="margin-top:10px;">
+            <label class="form-label">SQL Query</label>
+            <textarea class="form-control" rows="3" @bind="form.Query"></textarea>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:10px;">
+            <button class="btn btn-success" @onclick="Save"><i class="fas fa-save"></i> Save</button>
+            <button class="btn btn-danger" @onclick="() => showForm = false"><i class="fas fa-times"></i> Cancel</button>
+        </div>
+    </div>
+}
+
+@code {
+    List<SchedulerTask> tasks = new();
+    SchedulerTask form = new();
+    SchedulerTask? editing;
+    bool showForm;
+    string? msg;
+
+    protected override async Task OnInitializedAsync() { tasks = await SchedSvc.GetAll(); }
+    void ShowAdd() { form = new() { IsEnabled = true }; editing = null; showForm = true; }
+    void Edit(SchedulerTask t) { form = new() { Idx = t.Idx, Name = t.Name, Day = t.Day, Time = t.Time, Query = t.Query, IsEnabled = t.IsEnabled, Comment = t.Comment }; editing = t; showForm = true; }
+    async Task ToggleTask(int idx, bool en) { await SchedSvc.ToggleEnabled(idx, en); tasks = await SchedSvc.GetAll(); }
+
+    async Task Save()
+    {
+        if (editing != null) await SchedSvc.Update(form);
+        else await SchedSvc.Create(form);
+        tasks = await SchedSvc.GetAll();
+        showForm = false;
+        msg = editing != null ? "Updated!" : "Created!";
+    }
+    async Task Delete(int idx) { await SchedSvc.Delete(idx); tasks = await SchedSvc.GetAll(); msg = "Deleted!"; }
+    string DayName(int d) => d switch { 0 => "Sunday", 1 => "Monday", 2 => "Tuesday", 3 => "Wednesday", 4 => "Thursday", 5 => "Friday", 6 => "Saturday", 7 => "Daily", _ => $"Day {d}" };
+}

@@ -1,0 +1,99 @@
+@page "/accounts"
+@inject PlayerService PlayerSvc
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title"><i class="fas fa-user-circle"></i> Accounts</h1>
+        <p class="page-subtitle">User account management and silk operations</p>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-title"><i class="fas fa-search"></i> Search Accounts</div>
+    <div style="display:flex;gap:10px;margin-bottom:15px;">
+        <input class="form-control" placeholder="Username..." @bind="searchName" @onkeydown="HandleKey" />
+        <button class="btn btn-primary" @onclick="Search"><i class="fas fa-search"></i> Search</button>
+    </div>
+    @if (accounts.Any())
+    {
+        <div class="table-container">
+            <table>
+                <thead><tr><th>JID</th><th>Username</th><th>Email</th><th>Characters</th><th>Actions</th></tr></thead>
+                <tbody>
+                    @foreach (var a in accounts)
+                    {
+                        <tr>
+                            <td>@a.JID</td>
+                            <td><strong>@a.StrUserID</strong></td>
+                            <td>@a.Email</td>
+                            <td>@a.CharCount</td>
+                            <td>
+                                <button class="btn btn-sm btn-primary" @onclick="() => LoadSilk(a.JID)">
+                                    <i class="fas fa-coins"></i> Silk
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+@if (editingSilk && selectedSilk != null)
+{
+    <div class="card">
+        <div class="card-title"><i class="fas fa-coins"></i> Edit Silk — JID @selectedSilk.JID</div>
+        <div class="form-grid">
+            <div class="form-group">
+                <label class="form-label">Silk Own</label>
+                <input class="form-control" type="number" @bind="selectedSilk.silk_own" />
+            </div>
+            <div class="form-group">
+                <label class="form-label">Silk Gift</label>
+                <input class="form-control" type="number" @bind="selectedSilk.silk_gift" />
+            </div>
+            <div class="form-group">
+                <label class="form-label">Silk Point</label>
+                <input class="form-control" type="number" @bind="selectedSilk.silk_point" />
+            </div>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:10px;">
+            <button class="btn btn-success" @onclick="SaveSilk"><i class="fas fa-save"></i> Save</button>
+            <button class="btn btn-danger" @onclick="() => editingSilk = false"><i class="fas fa-times"></i> Cancel</button>
+        </div>
+        @if (silkSaved) { <div class="alert alert-success" style="margin-top:10px;">Silk updated!</div> }
+    </div>
+}
+
+@code {
+    List<AccountInfo> accounts = new();
+    SilkInfo? selectedSilk;
+    string searchName = "";
+    bool editingSilk = false;
+    bool silkSaved = false;
+
+    async Task Search()
+    {
+        if (!string.IsNullOrWhiteSpace(searchName))
+            accounts = await PlayerSvc.SearchAccounts(searchName);
+    }
+
+    async Task HandleKey(KeyboardEventArgs e) { if (e.Key == "Enter") await Search(); }
+
+    async Task LoadSilk(int jid)
+    {
+        selectedSilk = await PlayerSvc.GetSilkByJID(jid);
+        if (selectedSilk == null)
+            selectedSilk = new SilkInfo { JID = jid };
+        editingSilk = true;
+        silkSaved = false;
+    }
+
+    async Task SaveSilk()
+    {
+        if (selectedSilk == null) return;
+        await PlayerSvc.UpdateSilk(selectedSilk.JID, selectedSilk.silk_own, selectedSilk.silk_gift, selectedSilk.silk_point);
+        silkSaved = true;
+    }
+}
