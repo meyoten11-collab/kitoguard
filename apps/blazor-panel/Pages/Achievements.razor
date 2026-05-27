@@ -1,0 +1,91 @@
+@page "/achievements"
+@inject AchievementService AchSvc
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title"><i class="fas fa-trophy"></i> Achievements</h1>
+        <p class="page-subtitle">Manage achievement definitions and conditions</p>
+    </div>
+    <button class="btn btn-primary" @onclick="ShowAdd"><i class="fas fa-plus"></i> Add Achievement</button>
+</div>
+
+@if (msg != null) { <div class="alert alert-success">@msg</div> }
+
+<div class="card">
+    <div class="table-container">
+        <table>
+            <thead><tr><th>ID</th><th>Name</th><th>Category</th><th>Active</th><th>Reward Type</th><th>Gold</th><th>SP</th><th>Actions</th></tr></thead>
+            <tbody>
+                @foreach (var a in items)
+                {
+                    <tr>
+                        <td>@a.ID</td>
+                        <td><strong>@a.Name</strong></td>
+                        <td>@a.Category</td>
+                        <td>
+                            <label class="toggle-switch"><input type="checkbox" checked="@a.Service" disabled /><span class="toggle-slider"></span></label>
+                        </td>
+                        <td>@a.RewardType</td>
+                        <td>@a.RewardGold.ToString("N0")</td>
+                        <td>@a.RewardSkillPoint.ToString("N0")</td>
+                        <td>
+                            <button class="btn btn-sm btn-primary" @onclick="() => Edit(a)"><i class="fas fa-edit"></i></button>
+                            <button class="btn btn-sm btn-danger" @onclick="() => Delete(a.ID)"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@if (showForm)
+{
+    <div class="card">
+        <div class="card-title">@(editing != null ? "Edit" : "Add") Achievement</div>
+        <div class="form-grid">
+            <div class="form-group"><label class="form-label">Name</label><input class="form-control" @bind="form.Name" /></div>
+            <div class="form-group"><label class="form-label">Category</label><input class="form-control" type="number" @bind="form.Category" /></div>
+            <div class="form-group">
+                <label class="form-label">Active</label>
+                <label class="toggle-switch"><input type="checkbox" @bind="form.Service" /><span class="toggle-slider"></span></label>
+            </div>
+            <div class="form-group"><label class="form-label">Reward Type</label><input class="form-control" type="number" @bind="form.RewardType" /></div>
+            <div class="form-group"><label class="form-label">Reward Title ID</label><input class="form-control" type="number" @bind="form.RewardTitleID" /></div>
+            <div class="form-group"><label class="form-label">Reward SP</label><input class="form-control" type="number" @bind="form.RewardSkillPoint" /></div>
+            <div class="form-group"><label class="form-label">Reward Gold</label><input class="form-control" type="number" @bind="form.RewardGold" /></div>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:10px;">
+            <button class="btn btn-success" @onclick="Save"><i class="fas fa-save"></i> Save</button>
+            <button class="btn btn-danger" @onclick="() => showForm = false"><i class="fas fa-times"></i> Cancel</button>
+        </div>
+    </div>
+}
+
+@code {
+    List<RefAchievement> items = new();
+    RefAchievement form = new();
+    RefAchievement? editing;
+    bool showForm = false;
+    string? msg;
+
+    protected override async Task OnInitializedAsync() { items = await AchSvc.GetAll(); }
+    void ShowAdd() { form = new(); editing = null; showForm = true; }
+    void Edit(RefAchievement a) { form = new() { ID = a.ID, Service = a.Service, Category = a.Category, Name = a.Name, RewardType = a.RewardType, RewardTitleID = a.RewardTitleID, RewardSkillPoint = a.RewardSkillPoint, RewardGold = a.RewardGold }; editing = a; showForm = true; }
+
+    async Task Save()
+    {
+        if (editing != null) await AchSvc.Update(form);
+        else await AchSvc.Create(form);
+        items = await AchSvc.GetAll();
+        showForm = false;
+        msg = editing != null ? "Updated!" : "Created!";
+    }
+
+    async Task Delete(int id)
+    {
+        await AchSvc.Delete(id);
+        items = await AchSvc.GetAll();
+        msg = "Deleted!";
+    }
+}

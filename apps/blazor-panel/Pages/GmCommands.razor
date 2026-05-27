@@ -1,0 +1,128 @@
+@page "/gmcommands"
+@inject GmCommandService GmSvc
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title"><i class="fas fa-terminal"></i> GM Commands</h1>
+        <p class="page-subtitle">Live in-game GM command execution (vSRO-ServerAddon)</p>
+    </div>
+</div>
+
+@if (msg != null) { <div class="alert alert-success"><i class="fas fa-check-circle"></i> @msg</div> }
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+
+<div class="card">
+    <div class="card-title"><i class="fas fa-gift"></i> Give Item</div>
+    <div class="form-group"><label class="form-label">Character</label><input class="form-control" @bind="charName" /></div>
+    <div class="form-group"><label class="form-label">Item ID</label><input class="form-control" type="number" @bind="itemId" /></div>
+    <div class="form-group"><label class="form-label">Count</label><input class="form-control" type="number" @bind="itemCount" /></div>
+    <div class="form-group"><label class="form-label">Plus (+)</label><input class="form-control" type="number" @bind="itemPlus" /></div>
+    <button class="btn btn-success" @onclick="DoGiveItem"><i class="fas fa-paper-plane"></i> Give Item</button>
+</div>
+
+<div class="card">
+    <div class="card-title"><i class="fas fa-coins"></i> Give Gold / SP / Silk</div>
+    <div class="form-group"><label class="form-label">Character</label><input class="form-control" @bind="charName2" /></div>
+    <div class="form-group"><label class="form-label">Gold Amount</label><input class="form-control" type="number" @bind="goldAmount" /></div>
+    <button class="btn btn-success" style="margin-bottom:10px;" @onclick="DoGiveGold"><i class="fas fa-coins"></i> Give Gold</button>
+    <div class="form-group"><label class="form-label">SP Amount</label><input class="form-control" type="number" @bind="spAmount" /></div>
+    <button class="btn btn-success" style="margin-bottom:10px;" @onclick="DoGiveSP"><i class="fas fa-star"></i> Give SP</button>
+    <div class="form-group"><label class="form-label">Silk Amount</label><input class="form-control" type="number" @bind="silkAmount" /></div>
+    <button class="btn btn-success" @onclick="DoGiveSilk"><i class="fas fa-gem"></i> Give Silk</button>
+</div>
+
+<div class="card">
+    <div class="card-title"><i class="fas fa-map-marker-alt"></i> Teleport</div>
+    <div class="form-group"><label class="form-label">Character</label><input class="form-control" @bind="charName3" /></div>
+    <div class="form-group"><label class="form-label">Region ID</label><input class="form-control" type="number" @bind="regionId" /></div>
+    <div class="form-grid">
+        <div class="form-group"><label class="form-label">X</label><input class="form-control" type="number" @bind="posX" /></div>
+        <div class="form-group"><label class="form-label">Y</label><input class="form-control" type="number" @bind="posY" /></div>
+        <div class="form-group"><label class="form-label">Z</label><input class="form-control" type="number" @bind="posZ" /></div>
+    </div>
+    <button class="btn btn-success" @onclick="DoTeleport"><i class="fas fa-map-marker-alt"></i> Teleport</button>
+</div>
+
+<div class="card">
+    <div class="card-title"><i class="fas fa-magic"></i> Buff / Spawn / State</div>
+    <div class="form-group"><label class="form-label">Character</label><input class="form-control" @bind="charName4" /></div>
+    <div class="form-group"><label class="form-label">Skill/Buff ID</label><input class="form-control" type="number" @bind="buffId" /></div>
+    <button class="btn btn-success" style="margin-bottom:10px;" @onclick="DoBuff"><i class="fas fa-magic"></i> Add Buff</button>
+    <div class="form-group"><label class="form-label">Mob ID</label><input class="form-control" type="number" @bind="mobId" /></div>
+    <div class="form-group"><label class="form-label">Mob Count</label><input class="form-control" type="number" @bind="mobCount" /></div>
+    <button class="btn btn-success" style="margin-bottom:10px;" @onclick="DoSpawn"><i class="fas fa-dragon"></i> Spawn Mob</button>
+    <div class="form-group"><label class="form-label">Body State (0-4)</label><input class="form-control" type="number" @bind="bodyState" /></div>
+    <button class="btn btn-success" style="margin-bottom:10px;" @onclick="DoBodyState"><i class="fas fa-user-cog"></i> Set Body State</button>
+    <div class="form-group"><label class="form-label">Hwan Level (0-5)</label><input class="form-control" type="number" @bind="hwanLevel" /></div>
+    <button class="btn btn-success" @onclick="DoHwan"><i class="fas fa-crown"></i> Set Hwan</button>
+</div>
+
+<div class="card">
+    <div class="card-title"><i class="fas fa-gavel"></i> Admin Actions</div>
+    <div class="form-group"><label class="form-label">Character</label><input class="form-control" @bind="charName5" /></div>
+    <button class="btn btn-primary" style="margin-bottom:8px;width:100%;" @onclick="DoReload"><i class="fas fa-sync-alt"></i> Reload Player</button>
+    <button class="btn btn-danger" style="margin-bottom:8px;width:100%;" @onclick="DoKick"><i class="fas fa-user-times"></i> Kick Player</button>
+    <div class="form-group"><label class="form-label">Ban Reason</label><input class="form-control" @bind="banReason" /></div>
+    <button class="btn btn-danger" style="margin-bottom:8px;width:100%;" @onclick="DoBan"><i class="fas fa-ban"></i> Ban Player</button>
+    <div class="form-group"><label class="form-label">Level</label><input class="form-control" type="number" @bind="setLevel" /></div>
+    <button class="btn btn-success" style="width:100%;" @onclick="DoSetLevel"><i class="fas fa-level-up-alt"></i> Set Level</button>
+</div>
+
+<div class="card">
+    <div class="card-title"><i class="fas fa-terminal"></i> Raw Command</div>
+    <div class="form-group"><label class="form-label">Custom Command</label><input class="form-control" @bind="rawCmd" placeholder="e.g. GiveItem [GM]Test 3000 1 0" /></div>
+    <button class="btn btn-primary" @onclick="DoRaw"><i class="fas fa-paper-plane"></i> Execute</button>
+</div>
+</div>
+
+<div class="card" style="margin-top:20px;">
+    <div class="card-title"><i class="fas fa-history"></i> Recent Commands</div>
+    <button class="btn btn-sm btn-primary" style="margin-bottom:10px;" @onclick="LoadHistory"><i class="fas fa-sync-alt"></i> Refresh</button>
+    <div class="table-container">
+        <table>
+            <thead><tr><th>ID</th><th>Command</th><th>Status</th></tr></thead>
+            <tbody>
+                @foreach (var c in recentCmds)
+                {
+                    <tr>
+                        <td>@c.ID</td>
+                        <td style="font-family:monospace">@c.Command</td>
+                        <td><span class="badge @(c.Status == 0 ? "badge-success" : c.Status == 1 ? "badge-warning" : "badge-danger")">@c.StatusText</span></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@code {
+    string charName = "", charName2 = "", charName3 = "", charName4 = "", charName5 = "";
+    int itemId, itemCount = 1, goldAmount, spAmount, silkAmount, regionId;
+    float posX, posY, posZ;
+    int buffId, mobId, mobCount = 1, bodyState, hwanLevel, setLevel = 1;
+    byte itemPlus;
+    string banReason = "", rawCmd = "";
+    string? msg;
+    List<AsyncCommand> recentCmds = new();
+
+    protected override async Task OnInitializedAsync() { await LoadHistory(); }
+
+    async Task ShowMsg(string m) { msg = m; StateHasChanged(); await Task.Delay(3000); msg = null; StateHasChanged(); }
+    async Task LoadHistory() { recentCmds = await GmSvc.GetRecentCommands(); }
+
+    async Task DoGiveItem() { await GmSvc.GiveItem(charName, itemId, itemCount, itemPlus); await ShowMsg($"Item {itemId} x{itemCount} given to {charName}"); await LoadHistory(); }
+    async Task DoGiveGold() { await GmSvc.GiveGold(charName2, goldAmount); await ShowMsg($"{goldAmount} gold given to {charName2}"); await LoadHistory(); }
+    async Task DoGiveSP() { await GmSvc.GiveSP(charName2, spAmount); await ShowMsg($"{spAmount} SP given to {charName2}"); await LoadHistory(); }
+    async Task DoGiveSilk() { await GmSvc.GiveSilk(charName2, silkAmount); await ShowMsg($"{silkAmount} silk given to {charName2}"); }
+    async Task DoTeleport() { await GmSvc.Teleport(charName3, regionId, posX, posY, posZ); await ShowMsg($"{charName3} teleported"); await LoadHistory(); }
+    async Task DoBuff() { await GmSvc.AddBuff(charName4, buffId); await ShowMsg($"Buff {buffId} added to {charName4}"); await LoadHistory(); }
+    async Task DoSpawn() { await GmSvc.SpawnMob(charName4, mobId, mobCount); await ShowMsg($"Spawned {mobCount}x mob {mobId}"); await LoadHistory(); }
+    async Task DoBodyState() { await GmSvc.SetBodyState(charName4, bodyState); await ShowMsg("Body state set"); await LoadHistory(); }
+    async Task DoHwan() { await GmSvc.SetHwanLevel(charName4, hwanLevel); await ShowMsg("Hwan level set"); await LoadHistory(); }
+    async Task DoReload() { await GmSvc.ReloadPlayer(charName5); await ShowMsg($"{charName5} reloaded"); await LoadHistory(); }
+    async Task DoKick() { await GmSvc.KickPlayer(charName5); await ShowMsg($"{charName5} kicked"); await LoadHistory(); }
+    async Task DoBan() { await GmSvc.BanPlayer(charName5, banReason); await ShowMsg($"{charName5} banned"); await LoadHistory(); }
+    async Task DoSetLevel() { await GmSvc.SetLevel(charName5, setLevel); await ShowMsg($"{charName5} level set to {setLevel}"); await LoadHistory(); }
+    async Task DoRaw() { if (!string.IsNullOrWhiteSpace(rawCmd)) { await GmSvc.ExecuteCommand(rawCmd); await ShowMsg("Command executed"); rawCmd = ""; await LoadHistory(); } }
+}

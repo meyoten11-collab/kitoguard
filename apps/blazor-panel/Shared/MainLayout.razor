@@ -1,0 +1,159 @@
+@inherits LayoutComponentBase
+@inject AuthService Auth
+@inject NavigationManager Nav
+
+@if (!Auth.IsAuthenticated || !Auth.IsSessionValid())
+{
+    <div class="login-container">
+        <div class="login-box">
+            <div class="login-logo">
+                <i class="fas fa-shield-halved"></i>
+                <h1>KitoGuard-S500</h1>
+                <p>Enterprise Server Management</p>
+            </div>
+            @if (!string.IsNullOrEmpty(loginError))
+            {
+                <div class="alert alert-danger"><i class="fas fa-exclamation-triangle"></i> @loginError</div>
+            }
+            <div class="form-group">
+                <label class="form-label">Username</label>
+                <input class="form-control" @bind="loginUser" placeholder="Admin" />
+            </div>
+            <div class="form-group">
+                <label class="form-label">Password</label>
+                <input class="form-control" type="password" @bind="loginPass" @onkeydown="HandleLoginKey" placeholder="Password" />
+            </div>
+            <button class="btn btn-primary" style="width:100%;margin-top:10px;" @onclick="DoLogin">
+                <i class="fas fa-sign-in-alt"></i> Login
+            </button>
+            <div class="login-footer">Dev by Kito aka AhmedYasser</div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="sidebar">
+        <div class="sidebar-brand">
+            <i class="fas fa-shield-halved"></i>
+            <span>KitoGuard-S500</span>
+        </div>
+
+        <div class="nav-section">Dashboard</div>
+        <NavLink class="nav-item" href="" Match="NavLinkMatch.All">
+            <span class="icon"><i class="fas fa-home"></i></span> <span>Dashboard</span>
+        </NavLink>
+
+        <div class="nav-section">Server</div>
+        <NavLink class="nav-item" href="settings">
+            <span class="icon"><i class="fas fa-cog"></i></span> <span>Settings</span>
+        </NavLink>
+        <NavLink class="nav-item" href="proxy">
+            <span class="icon"><i class="fas fa-network-wired"></i></span> <span>Proxy Services</span>
+        </NavLink>
+        <NavLink class="nav-item" href="scheduler">
+            <span class="icon"><i class="fas fa-clock"></i></span> <span>Scheduler</span>
+        </NavLink>
+        <NavLink class="nav-item" href="notices">
+            <span class="icon"><i class="fas fa-bullhorn"></i></span> <span>Notices</span>
+        </NavLink>
+
+        <div class="nav-section">Players</div>
+        <NavLink class="nav-item" href="players">
+            <span class="icon"><i class="fas fa-users"></i></span> <span>Players</span>
+        </NavLink>
+        <NavLink class="nav-item" href="accounts">
+            <span class="icon"><i class="fas fa-user-circle"></i></span> <span>Accounts</span>
+        </NavLink>
+        <NavLink class="nav-item" href="guilds">
+            <span class="icon"><i class="fas fa-chess-rook"></i></span> <span>Guilds</span>
+        </NavLink>
+        <NavLink class="nav-item" href="unions">
+            <span class="icon"><i class="fas fa-handshake"></i></span> <span>Unions</span>
+        </NavLink>
+
+        <div class="nav-section">Features</div>
+        <NavLink class="nav-item" href="achievements">
+            <span class="icon"><i class="fas fa-trophy"></i></span> <span>Achievements</span>
+        </NavLink>
+        <NavLink class="nav-item" href="attendance">
+            <span class="icon"><i class="fas fa-calendar-check"></i></span> <span>Attendance</span>
+        </NavLink>
+        <NavLink class="nav-item" href="events">
+            <span class="icon"><i class="fas fa-calendar-star"></i></span> <span>Events</span>
+        </NavLink>
+        <NavLink class="nav-item" href="itemmall">
+            <span class="icon"><i class="fas fa-store"></i></span> <span>Item Mall</span>
+        </NavLink>
+        <NavLink class="nav-item" href="luckyspin">
+            <span class="icon"><i class="fas fa-dice"></i></span> <span>Lucky Spin</span>
+        </NavLink>
+        <NavLink class="nav-item" href="itemchest">
+            <span class="icon"><i class="fas fa-box-open"></i></span> <span>Item Chest</span>
+        </NavLink>
+        <NavLink class="nav-item" href="rankings">
+            <span class="icon"><i class="fas fa-ranking-star"></i></span> <span>Rankings</span>
+        </NavLink>
+        <NavLink class="nav-item" href="uniquehistory">
+            <span class="icon"><i class="fas fa-dragon"></i></span> <span>Unique History</span>
+        </NavLink>
+
+        <div class="nav-section">Security</div>
+        <NavLink class="nav-item" href="hwid">
+            <span class="icon"><i class="fas fa-fingerprint"></i></span> <span>HWID Management</span>
+        </NavLink>
+
+        <div class="nav-section">GM Tools</div>
+        <NavLink class="nav-item" href="gmcommands">
+            <span class="icon"><i class="fas fa-terminal"></i></span> <span>GM Commands</span>
+        </NavLink>
+
+        <div class="nav-section">Database</div>
+        <NavLink class="nav-item" href="dbbrowser">
+            <span class="icon"><i class="fas fa-database"></i></span> <span>DB Browser</span>
+        </NavLink>
+
+        <div class="sidebar-footer">
+            <div class="sidebar-user">
+                <i class="fas fa-user-shield"></i> @Auth.CurrentUser?.Username
+            </div>
+            <button class="btn btn-sm btn-danger" style="width:100%;margin-top:8px;" @onclick="DoLogout">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+            <div class="login-footer" style="margin-top:10px;">Dev by Kito aka AhmedYasser</div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        @Body
+    </div>
+}
+
+@code {
+    string loginUser = "";
+    string loginPass = "";
+    string loginError = "";
+
+    void DoLogin()
+    {
+        if (Auth.Login(loginUser, loginPass))
+        {
+            loginError = "";
+            StateHasChanged();
+        }
+        else
+        {
+            loginError = "Invalid username or password";
+        }
+    }
+
+    void HandleLoginKey(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter") DoLogin();
+    }
+
+    void DoLogout()
+    {
+        Auth.Logout();
+        Nav.NavigateTo("/", forceLoad: true);
+    }
+}

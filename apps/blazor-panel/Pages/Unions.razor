@@ -1,0 +1,42 @@
+@page "/unions"
+@inject GuildService GuildSvc
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title"><i class="fas fa-handshake"></i> Unions</h1>
+        <p class="page-subtitle">Guild alliance management</p>
+    </div>
+    <button class="btn btn-primary" @onclick="Load"><i class="fas fa-sync-alt"></i> Refresh</button>
+</div>
+
+<div class="card">
+    <div class="card-title"><i class="fas fa-link"></i> Active Unions</div>
+    @if (unions.Any())
+    {
+        <div class="table-container">
+            <table>
+                <thead><tr><th>Alliance ID</th><th>Guild Name</th><th>Guild ID</th></tr></thead>
+                <tbody>
+                    @foreach (var u in unions)
+                    {
+                        <tr>
+                            <td><span class="badge">@u.AllianceID</span></td>
+                            <td><strong>@u.GuildName</strong></td>
+                            <td>@u.GuildID</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <p style="color:var(--kg-text-muted);text-align:center;">No active unions found.</p>
+    }
+</div>
+
+@code {
+    List<UnionInfo> unions = new();
+    protected override async Task OnInitializedAsync() => await Load();
+    async Task Load() { unions = await GuildSvc.GetUnions(); }
+}

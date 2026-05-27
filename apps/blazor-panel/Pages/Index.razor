@@ -1,0 +1,70 @@
+@page "/"
+@inject SettingsService SettingsSvc
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title"><i class="fas fa-tachometer-alt"></i> Dashboard</h1>
+        <p class="page-subtitle">KitoGuard-S500 Server Overview</p>
+    </div>
+    <button class="btn btn-primary" @onclick="RefreshStats"><i class="fas fa-sync-alt"></i> Refresh</button>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-icon"><i class="fas fa-users" style="color:#00c853"></i></div>
+        <div class="stat-value">@stats.OnlinePlayers</div>
+        <div class="stat-label">Online Players</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon"><i class="fas fa-user" style="color:#2196f3"></i></div>
+        <div class="stat-value">@stats.TotalCharacters</div>
+        <div class="stat-label">Total Characters</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon"><i class="fas fa-id-card" style="color:#ff9800"></i></div>
+        <div class="stat-value">@stats.TotalAccounts</div>
+        <div class="stat-label">Total Accounts</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon"><i class="fas fa-chess-rook" style="color:#9c27b0"></i></div>
+        <div class="stat-value">@stats.TotalGuilds</div>
+        <div class="stat-label">Total Guilds</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon"><i class="fas fa-sliders-h" style="color:#e91e63"></i></div>
+        <div class="stat-value">@stats.SettingsCount</div>
+        <div class="stat-label">Settings</div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-title"><i class="fas fa-info-circle"></i> System Information</div>
+    <div class="form-grid">
+        <div>
+            <p><strong>Panel:</strong> KitoGuard-S500 WebPanel</p>
+            <p><strong>Framework:</strong> .NET 8 Blazor Server</p>
+            <p><strong>Database:</strong> MSSQL (Dapper)</p>
+        </div>
+        <div>
+            <p><strong>Architecture:</strong> Filter + DevKit + WebPanel</p>
+            <p><strong>Communication:</strong> SignalR Ready</p>
+            <p><strong>Version:</strong> 2.0.0</p>
+        </div>
+    </div>
+</div>
+
+@code {
+    DashboardStat stats = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await RefreshStats();
+    }
+
+    async Task RefreshStats()
+    {
+        try { stats = await SettingsSvc.GetDashboardStats(); }
+        catch { }
+        StateHasChanged();
+    }
+}

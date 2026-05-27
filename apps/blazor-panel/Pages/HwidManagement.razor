@@ -1,0 +1,78 @@
+@page "/hwid"
+@inject NoticeService NoticeSvc
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title"><i class="fas fa-fingerprint"></i> HWID Management</h1>
+        <p class="page-subtitle">Hardware ID bypass and IP management</p>
+    </div>
+    <button class="btn btn-primary" @onclick="() => showForm = true"><i class="fas fa-plus"></i> Add Bypass</button>
+</div>
+
+@if (msg != null) { <div class="alert alert-success">@msg</div> }
+
+<div class="card">
+    <div class="card-title"><i class="fas fa-list"></i> HWID Bypass List</div>
+    <div class="table-container">
+        <table>
+            <thead><tr><th>ID</th><th>IP</th><th>HWID</th><th>Reason</th><th>Actions</th></tr></thead>
+            <tbody>
+                @foreach (var b in bypasses)
+                {
+                    <tr>
+                        <td>@b.ID</td>
+                        <td>@b.IP</td>
+                        <td style="font-family:monospace;font-size:0.8rem;">@b.HWID</td>
+                        <td>@b.Reason</td>
+                        <td><button class="btn btn-sm btn-danger" @onclick="() => Remove(b.ID)"><i class="fas fa-trash"></i></button></td>
+                    </tr>
+                }
+                @if (!bypasses.Any())
+                {
+                    <tr><td colspan="5" style="text-align:center;color:var(--kg-text-muted)">No HWID bypasses configured</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@if (showForm)
+{
+    <div class="card">
+        <div class="card-title">Add HWID Bypass</div>
+        <div class="form-grid">
+            <div class="form-group"><label class="form-label">IP Address</label><input class="form-control" @bind="newIp" /></div>
+            <div class="form-group"><label class="form-label">HWID</label><input class="form-control" @bind="newHwid" /></div>
+            <div class="form-group"><label class="form-label">Reason</label><input class="form-control" @bind="newReason" /></div>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:10px;">
+            <button class="btn btn-success" @onclick="Add"><i class="fas fa-save"></i> Add</button>
+            <button class="btn btn-danger" @onclick="() => showForm = false"><i class="fas fa-times"></i> Cancel</button>
+        </div>
+    </div>
+}
+
+@code {
+    List<HwidBypass> bypasses = new();
+    string newIp = "", newHwid = "", newReason = "";
+    bool showForm;
+    string? msg;
+
+    protected override async Task OnInitializedAsync() { bypasses = await NoticeSvc.GetHwidBypasses(); }
+
+    async Task Add()
+    {
+        await NoticeSvc.AddHwidBypass(newIp, newHwid, newReason);
+        bypasses = await NoticeSvc.GetHwidBypasses();
+        showForm = false;
+        newIp = newHwid = newReason = "";
+        msg = "Added!";
+    }
+
+    async Task Remove(int id)
+    {
+        await NoticeSvc.RemoveHwidBypass(id);
+        bypasses = await NoticeSvc.GetHwidBypasses();
+        msg = "Removed!";
+    }
+}

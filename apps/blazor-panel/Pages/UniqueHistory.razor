@@ -1,0 +1,39 @@
+@page "/uniquehistory"
+@inject NoticeService NoticeSvc
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title"><i class="fas fa-dragon"></i> Unique History</h1>
+        <p class="page-subtitle">Unique monster kill records</p>
+    </div>
+    <button class="btn btn-primary" @onclick="Load"><i class="fas fa-sync-alt"></i> Refresh</button>
+</div>
+
+<div class="card">
+    <div class="table-container">
+        <table>
+            <thead><tr><th>ID</th><th>Unique</th><th>Killer</th><th>Kill Date</th></tr></thead>
+            <tbody>
+                @foreach (var h in history)
+                {
+                    <tr>
+                        <td>@h.ID</td>
+                        <td><strong>@h.UniqueName</strong></td>
+                        <td>@h.KillerName</td>
+                        <td>@h.KillDate</td>
+                    </tr>
+                }
+                @if (!history.Any())
+                {
+                    <tr><td colspan="4" style="text-align:center;color:var(--kg-text-muted)">No unique kills recorded</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@code {
+    List<UniqueHistoryEntry> history = new();
+    protected override async Task OnInitializedAsync() => await Load();
+    async Task Load() { history = await NoticeSvc.GetUniqueHistory(); }
+}

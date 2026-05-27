@@ -1,0 +1,72 @@
+@page "/guilds"
+@inject GuildService GuildSvc
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title"><i class="fas fa-chess-rook"></i> Guilds</h1>
+        <p class="page-subtitle">Guild management and member overview</p>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-title"><i class="fas fa-search"></i> Search Guilds</div>
+    <div style="display:flex;gap:10px;margin-bottom:15px;">
+        <input class="form-control" placeholder="Guild name..." @bind="searchName" @onkeydown="HandleKey" />
+        <button class="btn btn-primary" @onclick="Search"><i class="fas fa-search"></i> Search</button>
+    </div>
+    @if (guilds.Any())
+    {
+        <div class="table-container">
+            <table>
+                <thead><tr><th>ID</th><th>Name</th><th>Level</th><th>SP</th><th>Gold</th><th>Members</th><th>Master</th><th>Actions</th></tr></thead>
+                <tbody>
+                    @foreach (var g in guilds)
+                    {
+                        <tr>
+                            <td>@g.ID</td>
+                            <td><strong>@g.Name</strong></td>
+                            <td>@g.Lvl</td>
+                            <td>@g.GatheredSP.ToString("N0")</td>
+                            <td>@g.Gold.ToString("N0")</td>
+                            <td>@g.MemberCount</td>
+                            <td>@g.MasterName</td>
+                            <td><button class="btn btn-sm btn-primary" @onclick="() => LoadMembers(g.ID)"><i class="fas fa-users"></i></button></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+@if (members.Any())
+{
+    <div class="card">
+        <div class="card-title"><i class="fas fa-users"></i> Guild Members</div>
+        <div class="table-container">
+            <table>
+                <thead><tr><th>CharID</th><th>Name</th><th>Class</th></tr></thead>
+                <tbody>
+                    @foreach (var m in members)
+                    {
+                        <tr><td>@m.CharID</td><td>@m.CharName</td><td><span class="badge">@m.ClassName</span></td></tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+
+@code {
+    List<GuildInfo> guilds = new();
+    List<GuildMember> members = new();
+    string searchName = "";
+
+    async Task Search()
+    {
+        if (!string.IsNullOrWhiteSpace(searchName))
+            guilds = await GuildSvc.SearchGuilds(searchName);
+    }
+    async Task HandleKey(KeyboardEventArgs e) { if (e.Key == "Enter") await Search(); }
+    async Task LoadMembers(int guildId) { members = await GuildSvc.GetGuildMembers(guildId); }
+}
